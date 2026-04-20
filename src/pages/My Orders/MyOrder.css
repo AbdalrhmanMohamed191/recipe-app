@@ -1,0 +1,155 @@
+.orders-container {
+  padding: 40px 20px;
+  margin-top: 60px;
+  background: linear-gradient(180deg, #0f0f0f, #c9c9c9e7);
+  min-height: 100vh;
+  color: #fff;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* TITLE */
+.title {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+/* EMPTY STATE */
+.empty {
+  text-align: center;
+  opacity: 0.5;
+  margin-top: 80px;
+  font-size: 18px;
+}
+
+/* GRID */
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 22px;
+}
+
+/* CARD */
+.order-card {
+  background: #1a1a1a;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transition: all 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.order-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255, 204, 0, 0.3);
+}
+
+/* HEADER */
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.order-id {
+  font-size: 12px;
+  color: #999;
+}
+
+/* STATUS BADGE */
+.status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+}
+
+/* STATUS COLORS */
+.pending {
+  background: rgba(255, 165, 0, 0.15);
+  color: orange;
+}
+
+.preparing {
+  background: rgba(52, 152, 219, 0.15);
+  color: #3498db;
+}
+
+.delivered {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+}
+
+.cancelled {
+  background: rgba(231, 76, 60, 0.15);
+  color: #e74c3c;
+}
+
+/* BODY */
+.order-body p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #ddd;
+}
+
+/* ITEMS */
+.order-items {
+  font-size: 13px;
+  color: #aaa;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+/* PROGRESS BAR WRAPPER */
+.progress-bar {
+  height: 6px;
+  background: #2a2a2a;
+  border-radius: 10px;
+  margin-top: 15px;
+  overflow: hidden;
+}
+
+/* PROGRESS */
+.progress {
+  height: 100%;
+  width: 0%;
+  transition: all 0.4s ease;
+  border-radius: 10px;
+}
+
+/* PROGRESS STATES */
+.progress.pending {
+  width: 25%;
+  background: orange;
+}
+
+.progress.preparing {
+  width: 60%;
+  background: #3498db;
+}
+
+.progress.delivered {
+  width: 100%;
+  background: #2ecc71;
+}
+
+.progress.cancelled {
+  width: 100%;
+  background: #e74c3c;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .title {
+    font-size: 24px;
+  }
+
+  .order-card {
+    padding: 15px;
+  }
+}

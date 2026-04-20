@@ -1,0 +1,357 @@
+/* ===== Google Font ===== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ===== Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  overflow-x: hidden;
+  background: #fff;
+}
+
+
+/* ===== Main Section ===== */
+.home {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 80px 8%;
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #fff6f1, #ffe3d3);
+}
+
+/* ===== Left Content ===== */
+.left {
+  width: 50%;
+  z-index: 2;
+  margin-top: 20px;
+}
+
+.left h1 {
+  font-size: 60px;
+  font-weight: 900;
+  color: #222;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.left h1 span {
+  background: linear-gradient(135deg, #ff7a3d, #ff3d3d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.left p {
+  font-size: 18px;
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 35px;
+  max-width: 520px;
+}
+
+/* ===== Button ===== */
+.btn {
+  padding: 14px 40px;
+  border: none;
+  border-radius: 14px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #ff9560, #ff5e3a);
+  color: white;
+
+  box-shadow: 0 10px 30px rgba(255, 120, 60, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(255, 120, 60, 0.6);
+}
+
+/* ===== Right Image ===== */
+.right {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Glow effect */
+.right::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(255, 120, 60, 0.4), transparent);
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 1;
+}
+
+.right img {
+  width: 380px;
+  z-index: 2;
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ===== Floating Animation ===== */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-30px); }
+  100% { transform: translateY(0px); }
+}
+
+/* ===== Background Wave ===== */
+.bg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  pointer-events: none;
+  height: px;
+}
+
+/* ===== Decorative Blobs ===== */
+.home::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 300px;
+  height: 300px;
+  background: #ff9560;
+  opacity: 0.2;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+
+.home::after {
+  content: "";
+  position: absolute;
+  bottom: -100px;
+  left: -100px;
+  width: 300px;
+  height: 300px;
+  background: #ff5e3a;
+  opacity: 0.2;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+
+/* ===== Glass Card (اختياري) ===== */
+.glass {
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+/* ===== Responsive ===== */
+
+
+
+@media (max-width: 992px) {
+  .left h1 {
+    font-size: 45px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .home {
+    flex-direction: column;
+    text-align: center;
+    padding: 50px 20px;
+  }
+
+  .left, .right {
+    width: 100%;
+  }
+
+  .left h1 {
+    font-size: 34px;
+  }
+
+  .left p {
+    margin: 0 auto 25px;
+  }
+
+  .right {
+    margin-top: 40px;
+  }
+
+  .right img {
+    width: 260px;
+  }
+}
+
+/* 🔥 Responsive */
+@media (max-width: 768px) {
+  .home {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .right img {
+    width: 250px;
+    margin-top: 30px;
+  }
+}
+
+/* Navbar Styles */
+/* ===== Navbar Container ===== */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+
+.recipe-card p,
+.recipe-card small {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* عدد السطور */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  max-width: 100%;
+}
+
+/* All Recipes styles */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #fffaf3;
+}
+
+/* Container */
+.recipes-container {
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+/* Title */
+.recipes-container h2 {
+  text-align: center;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #d35400;
+  position: relative;
+}
+
+.recipes-container h2::after {
+  content: "";
+  width: 80px;
+  height: 4px;
+  background: #f39c12;
+  display: block;
+  margin: 10px auto;
+  border-radius: 10px;
+}
+
+/* Grid */
+.recipes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 25px;
+}
+
+/* Card */
+.recipe-card {
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  border: 1px solid #ffe0b2;
+  position: relative;
+}
+
+/* Hover */
+.recipe-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+/* Card content */
+.recipe-card h4 {
+  font-size: 22px;
+  color: #e67e22;
+  margin: 15px;
+}
+
+.recipe-card p {
+  font-size: 14px;
+  color: #555;
+  margin: 0 15px 10px;
+  line-height: 1.6;
+}
+
+/* Instructions */
+.recipe-card small {
+  display: block;
+  margin: 0 15px 20px;
+  font-size: 13px;
+  color: #888;
+}
+
+/* Accent top bar */
+.recipe-card::before {
+  content: "";
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(90deg, #f39c12, #e67e22);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Button feel (fake hover effect) */
+.recipe-card:hover h4 {
+  color: #d35400;
+  transition: 0.3s;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .recipes-container h2 {
+    font-size: 30px;
+  }
+}
+.icons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 15px 15px;
+}
+
+.fav-icon {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.fav-icon:hover {
+  transform: scale(1.2);
+}
+
