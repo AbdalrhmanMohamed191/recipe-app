@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import axios from "axios";
 import socket from "../../socket/socket";
 import "./MyOrder.css";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +9,8 @@ const MyOrders = () => {
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
-  // FETCH ORDERS
+
+  // FETCH
   useEffect(() => {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
@@ -22,14 +22,11 @@ const MyOrders = () => {
 
     const fetchOrders = async () => {
       try {
-        const res = await api.get(
-          "/api/v1/orders/myorders",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const res = await api.get("/api/v1/orders/myorders", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-        setOrders(res.data);
+        setOrders(res.data || []);
       } catch (err) {
         console.log(err);
       } finally {
@@ -40,7 +37,7 @@ const MyOrders = () => {
     fetchOrders();
   }, [navigate]);
 
-  // SOCKET
+  // CONNECT SOCKET 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) return;
@@ -72,7 +69,7 @@ const MyOrders = () => {
     };
   }, []);
 
-  // STATUS
+  // STATUS 
   const getStatusClass = (status) => {
     switch (status) {
       case "pending":
@@ -88,6 +85,21 @@ const MyOrders = () => {
     }
   };
 
+  const getStatusText = (status) => {
+    switch (status) {
+      case "pending":
+        return "⏳ Pending";
+      case "preparing":
+        return "👨‍🍳 Preparing";
+      case "delivered":
+        return "✅ Delivered";
+      case "cancelled":
+        return "❌ Cancelled";
+      default:
+        return status;
+    }
+  };
+
   // LOADING
   if (loading) {
     return (
@@ -98,13 +110,18 @@ const MyOrders = () => {
     );
   }
 
-  // UI RETURN
+  // UI 
   return (
     <div className="orders-container">
       <h2 className="title">My Orders</h2>
 
       {orders.length === 0 ? (
-        <p className="empty">No orders yet 😢</p>
+        <div className="empty-box">
+          <p>No orders yet 😢</p>
+          <button onClick={() => navigate("/menue")} className="btn-primary btn outline">
+            Order Now 🍔
+          </button>
+        </div>
       ) : (
         <div className="orders-grid">
           {orders.map((o) => (
@@ -114,8 +131,9 @@ const MyOrders = () => {
                 <span className="order-id">
                   #{o._id.slice(-6).toUpperCase()}
                 </span>
+
                 <span className={`status ${getStatusClass(o.status)}`}>
-                  {o.status}
+                  {getStatusText(o.status)}
                 </span>
               </div>
 
@@ -126,7 +144,8 @@ const MyOrders = () => {
                 </p>
 
                 <p>
-                  <b>Subtotal:</b> {o.subtotal || 0} EGP
+                  <b>Items:</b>{" "}
+                  {o.items?.map((i) => i.title).join(", ")}
                 </p>
 
                 <p>
@@ -134,19 +153,20 @@ const MyOrders = () => {
                 </p>
 
                 <p>
-                  <b>Tax:</b> {o.tax || 0} EGP
+                  <b>Discount:</b> {o.discount || 0} EGP
                 </p>
 
-                <p>
-                  <b>Total:</b> {o.totalPrice} EGP
+                <p className="total">
+                  Total: {o.totalPrice} EGP
                 </p>
 
-                {/* ADDRESS */}
-                <p>
-                  <b>Address:</b>{" "}
-                  {o.address?.street}, {o.address?.city}
+                <p className="address">
+                  📍 {o.address?.street}, {o.address?.city}
                 </p>
               </div>
+
+            
+            
 
               {/* PROGRESS */}
               <div className="progress-bar">

@@ -5,7 +5,6 @@ import heroImg from "../../assets/Floating-burger.png";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "bootstrap";
 
 function Home() {
   const container = useRef();
@@ -13,159 +12,107 @@ function Home() {
 
   useGSAP(() => {
     gsap.from(".hero-left", {
-      x: -80,
+      x: -40,
       opacity: 0,
-      duration: 1,
+      duration: 0.8,
       ease: "power3.out",
     });
 
     gsap.from(".hero-right", {
-      x: 80,
+      x: 40,
       opacity: 0,
-      duration: 1,
+      duration: 0.8,
       ease: "power3.out",
-    });
-
-    gsap.to(".floating", {
-      y: 20,
-      repeat: -1,
-      yoyo: true,
-      duration: 2,
-      ease: "sine.inOut",
     });
   }, { scope: container });
 
-    const goToMenue = () => {
-        go("/menue");
-    }
   return (
     <div ref={container} className="home-container">
 
       {/* HERO */}
       <section className="hero">
+
+        {/* LEFT */}
         <div className="hero-left">
+
+          <span className="badge">🔥 Fast • Fresh • Delicious</span>
+
           <h1>
-            Delicious Food <br /> <span>Delivered Fast</span> 🍕
+            Delicious Food <br />
+            <span>Delivered Fast</span>
           </h1>
 
           <p>
-            Discover top recipes, fresh meals and restaurant-quality food at your home.
+            Order your favorite meals from top restaurants and get them delivered in minutes.
           </p>
 
-          <div className="hero-actions">
-            <button className="btn-primary">Book a Table</button>
-            <button  onClick={goToMenue} className="btn-outline">Explore Menu</button>
+          <div className="hero-buttons">
+
+            <button className="btn primary" onClick={() => go("/menue")}>
+              🍽 Explore Menu
+            </button>
+
+            <button className="btn outline" onClick={() => go("/booktable")}>
+              📅 Book Table
+            </button>
+
+            <button className="btn offers" onClick={() => go("/offers")}>
+              🔥 Offers
+            </button>
+
           </div>
 
           <div className="stats">
             <div>
               <h3>10K+</h3>
-              <p>Meals</p>
+              <p>Orders</p>
             </div>
             <div>
               <h3>5K+</h3>
-              <p>Users</p>
+              <p>Customers</p>
             </div>
             <div>
-              <h3>7.9 ⭐</h3>
+              <h3>4.9⭐</h3>
               <p>Rating</p>
             </div>
           </div>
+
         </div>
 
+        {/* RIGHT */}
         <div className="hero-right">
-          <img className="floating" src={heroImg} alt="" />
+          <div className="img-box">
+            <img src={heroImg} alt="food" />
+          </div>
         </div>
+
       </section>
 
-      {/* CATEGORIES */}
-      <section className="categories">
-        <h2>🔥 Popular Categories</h2>
+      {/* CONTACT */}
+      <section className="contact-section">
 
-        <div className="grid">
-          <div className="card">🍔 Burger</div>
-          <div className="card">🍕 Pizza</div>
-          <div className="card">🥗 Healthy</div>
-          <div className="card">🍰 Dessert</div>
-          <div className="card">🍜 Pasta</div>
-          <div className="card">🥩 Steak</div>
-        </div>
-      </section>
+        <h2>📞 Get in Touch</h2>
+        <p>We’re available 24/7 for support and orders</p>
 
-      {/* FEATURED */}
-      <section className="featured">
-        <h2>⭐ Chef Specials</h2>
+        <div className="contact-grid">
 
-        <div className="featured-grid">
-
-          <div className="food-card">
-            <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1" />
-            <div>
-              <h3>Grilled Chicken</h3>
-              <p>High protein meal</p>
-              <span>120 EGP</span>
-               <button className="btn-primary" style={{
-                marginTop: "10px",
-                width: "100%",
-                padding: "8px",
-                borderRadius: "10px",
-                border: "none",
-                background: "#422ba6",
-                color: "#fff",
-                cursor: "pointer",
-                fontSize: "16px",
-                fontWeight: "bold",
-                
-              }}>Order Now</button>
-            </div>
+          <div className="contact-card">
+            <h3>☎ Hotline</h3>
+            <p>+20 100 000 0000</p>
           </div>
 
-          <div className="food-card">
-            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38" />
-            <div>
-              <h3>Cheese Pizza</h3>
-              <p>Italian classic</p>
-              <span>150 EGP</span>
-               <button className="btn-primary" style={{
-                marginTop: "10px",
-                width: "100%",
-                padding: "8px",
-                borderRadius: "10px",
-                border: "none",
-                background: "#422ba6",
-                color: "#fff",
-                cursor: "pointer",
-                fontSize: "16px",
-                fontWeight: "bold",
-                
-              }}>Order Now</button>
-            </div>
+          <div className="contact-card">
+            <h3>💬 Support</h3>
+            <p>support@restaurant.com</p>
           </div>
 
-          <div className="food-card">
-            <img src="https://images.unsplash.com/photo-1550547660-d9450f859349" />
-            <div>
-              <h3>Beef Burger</h3>
-              <p>Juicy & fresh</p>
-              <span>110 EGP</span>
-              <button className="btn-primary" style={{
-                marginTop: "10px",
-                width: "100%",
-                padding: "8px",
-                borderRadius: "10px",
-                border: "none",
-                background: "#422ba6",
-                color: "#fff",
-                cursor: "pointer",
-                fontSize: "16px",
-                fontWeight: "bold",
-                
-              }}>Order Now</button>
-            </div>
+          <div className="contact-card">
+            <h3>🌐 Social</h3>
+            <p>Facebook • Instagram • Twitter</p>
           </div>
-         
 
         </div>
+
       </section>
 
     </div>

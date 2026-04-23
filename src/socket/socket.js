@@ -1,7 +1,13 @@
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5000", {
-  autoConnect: false, // هنفتحه بعد اللوجين
+const URL =
+  import.meta.env.VITE_PRODUCTION_ENV === "true"
+    ? import.meta.env.VITE_BACKEND_BASE
+    : import.meta.env.VITE_BACKEND_BASE_LOCAL;
+
+const socket = io(URL, {
+  autoConnect: false,
+  transports: ["websocket"], // مهم للاستقرار في production
 });
 
 export default socket;

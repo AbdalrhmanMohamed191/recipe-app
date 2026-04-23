@@ -1,27 +1,60 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useCart } from "../../component/CartContext/CartContext";
 import { FaTrash, FaPlus, FaMinus } from "react-icons/fa";
-// import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import api from "../../api/api";
+import "./cart.css";
 
 const Cart = () => {
-  const { cart, removeFromCart, increaseQty, decreaseQty, clearCart } =
-    useCart();
+  const {
+    cart,
+    removeFromCart,
+    increaseQty,
+    decreaseQty,
+    clearCart,
+    addToCart,
+  } = useCart();
 
-  const [address, setAddress] = React.useState({
+  const location = useLocation();
+  const go = useNavigate();
+
+  const [address, setAddress] = useState({
     street: "",
     city: "",
     notes: "",
   });
 
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+  // 🔥 منع تكرار الري-أوردر
+  const didReorder = useRef(false);
+
+  // ================= RE-ORDER =================
+  useEffect(() => {
+    if (location.state?.reorderItems && !didReorder.current) {
+      didReorder.current = true;
+
+      location.state.reorderItems.forEach((item) => {
+        addToCart({
+          _id: item._id,
+          title: item.title,
+          price: item.originalPrice || item.price,
+          discount: item.discount || 0,
+          isActive: item.isActive,
+        });
+      });
+
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, addToCart]);
+
+  const totalItems = cart.reduce(
+    (sum, item) => sum + Number(item.quantity || 0),
     0
   );
 
-  const go = useNavigate();
+  const totalPrice = cart.reduce(
+    (sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 0),
+    0
+  );
 
   const btnStyle = {
     border: "none",
@@ -45,13 +78,9 @@ const Cart = () => {
     };
 
     try {
-      const res = await api.post(
-        "/api/v1/orders/create",
-        payload,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await api.post("/api/v1/orders/create", payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       clearCart();
       go("/myorders");
@@ -69,6 +98,11 @@ const Cart = () => {
         🛒 Your Cart
       </h2>
 
+       {/* FLOATING BUTTON */}
+      <button className="myorders-btn" onClick={() => go("/myorders")}>
+        📦 My Orders
+      </button>
+
       {/* SUMMARY */}
       <div
         style={{
@@ -83,6 +117,7 @@ const Cart = () => {
         <span style={{ fontWeight: "bold", marginTop: 10 }}>
           Total Items: {totalItems}
         </span>
+
         <span style={{ fontWeight: "bold", marginTop: 10 }}>
           Total: {totalPrice.toFixed(2)} EGP
         </span>
@@ -110,8 +145,9 @@ const Cart = () => {
           >
             <div>
               <h4 style={{ margin: 0 }}>{item.title}</h4>
+
               <p style={{ margin: "5px 0", color: "#777" }}>
-                {item.price} EGP × {item.quantity}
+                {Number(item.price).toFixed(2)} EGP × {item.quantity}
               </p>
             </div>
 
@@ -211,3 +247,4 @@ const Cart = () => {
 };
 
 export default Cart;
+

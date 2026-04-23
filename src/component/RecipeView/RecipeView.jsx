@@ -26,7 +26,7 @@ const RecipeView = () => {
     fetchRecipe();
   }, [id]);
 
-  // ================= دالة معالجة رابط الصورة (نفس منطق Admin) =================
+  // images
   const getImageUrl = (data) => {
     if (!data) return "https://via.placeholder.com/600x400?text=No+Image";
     

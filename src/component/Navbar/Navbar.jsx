@@ -1,130 +1,9 @@
-// import React, { useState } from "react";
-// import img_2 from "../../assets/images-removebg-preview.png";
-// import "./Navbar.css";
-// import Modal from "../Modal/Modal";
-// import InputForm from "../InputForm/InputForm";
-// import { Link, useNavigate } from "react-router-dom";
-// import { useCart } from "../CartContext/CartContext";
-// import { FaShoppingCart } from "react-icons/fa";
-// import { useSelector, useDispatch } from "react-redux";
-// import { clearUser } from "../../../store/userSlice/userSlice";
-// import socket from "../../socket/socket";
-
-// const Navbar = () => {
-//   const [open, setOpen] = useState(false);
-//   const [modalOpen, setModalOpen] = useState(false);
-
-//   const navigate = useNavigate();
-//   const dispatch = useDispatch();
-
-//   const { cart } = useCart();
-//   const user = useSelector((state) => state.user.user);
-
-//   const isLoggedIn = !!user;
-//   const isAdmin = user?.role === "admin";
-
-//   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-//   const openLogin = () => {
-//     setModalOpen(true);
-//     setOpen(false);
-//   };
-
-//   const closeModal = () => setModalOpen(false);
-
-//   const handleLogout = () => {
-    
-//     localStorage.removeItem("token");
-//     localStorage.removeItem("user");
-//     dispatch(clearUser());
-//     // socket.disconnect();
-//       socket.disconnect();
-//     navigate("/");
-    
-//   };
-
-//   const handleProtectRoute = (e) => {
-//     if (!isLoggedIn) {
-//       e.preventDefault();
-//       setModalOpen(true);
-//     } else {
-//       setOpen(false);
-//     }
-//   };
-
-//   return (
-//     <>
-//       <header>
-//         <nav className="navbar">
-
-//           <div className="logo">
-//             <img src={img_2} alt="Logo" />
-//           </div>
-
-//           <div className="menu-icon" onClick={() => setOpen(!open)}>
-//             ☰
-//           </div>
-
-//           <ul className={`nav-links ${open ? "active" : ""}`}>
-
-//             <li><Link to="/">Home</Link></li>
-
-//             <li>
-//               <Link to="/menue" onClick={handleProtectRoute}>
-//                 Menue
-//               </Link>
-//             </li>
-
-//             <li><Link to="/about">About</Link></li>
-//             <li><Link to="/contact">Contact</Link></li>
-
-//             {isLoggedIn && (
-//               <li className="cart-icon">
-//                 <Link to="/cart">
-//                   <FaShoppingCart />
-//                   {totalItems > 0 && (
-//                     <span className="cart-badge">{totalItems}</span>
-//                   )}
-//                 </Link>
-//               </li>
-//             )}
-//               {isLoggedIn && (
-//                     <li>
-//                       <Link to="/myorders">My Orders</Link>
-//                     </li>
-//             )}
-
-//             {isAdmin && (
-//               <li><Link to="/admin">Admin</Link></li>
-//             )}
-
-//             <li onClick={isLoggedIn ? handleLogout : openLogin}>
-//               {isLoggedIn ? "Logout" : "Login"}
-//             </li>
-
-//           </ul>
-//         </nav>
-//       </header>
-
-//       {modalOpen && (
-//         <Modal closeModal={closeModal}>
-//           <InputForm closeModal={closeModal} />
-//         </Modal>
-//       )}
-//     </>
-//   );
-// };
-
-// export default Navbar;
-
-
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import img_2 from "../../assets/images-removebg-preview.png";
 import "./Navbar.css";
 import Modal from "../Modal/Modal";
 import InputForm from "../InputForm/InputForm";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "../CartContext/CartContext";
 import { FaShoppingCart } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
@@ -136,6 +15,7 @@ const Navbar = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const { cart } = useCart();
@@ -145,6 +25,13 @@ const Navbar = () => {
   const isAdmin = user?.role === "admin";
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  // يقفل المنيو تلقائي عند تغيير الصفحة
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
+
+  const closeMenu = () => setOpen(false);
 
   const openLogin = () => {
     setModalOpen(true);
@@ -168,8 +55,6 @@ const Navbar = () => {
     if (!isLoggedIn) {
       e.preventDefault();
       setModalOpen(true);
-    } else {
-      setOpen(false);
     }
   };
 
@@ -183,58 +68,67 @@ const Navbar = () => {
             <img src={img_2} alt="Logo" />
           </div>
 
-          {/* MENU ICON */}
+          {/* HAMBURGER */}
           <div className="menu-icon" onClick={() => setOpen(!open)}>
             ☰
           </div>
 
-          {/* NAV LINKS */}
+          {/* LINKS */}
           <ul className={`nav-links ${open ? "active" : ""}`}>
 
-            {/* MAIN LINKS */}
-            <li><Link to="/">Home</Link></li>
+            <li>
+              <Link to="/" onClick={closeMenu}>Home</Link>
+            </li>
 
             <li>
-              <Link to="/menue" onClick={handleProtectRoute}>
+              <Link
+                to="/menue"
+                onClick={(e) => {
+                  handleProtectRoute(e);
+                  closeMenu();
+                }}
+              >
                 Menu
               </Link>
             </li>
 
-            <li><Link to="/about">About</Link></li>
-            <li><Link to="/contact">Contact</Link></li>
+            <li>
+              <Link to="/about" onClick={closeMenu}>About</Link>
+            </li>
 
-            {/* USER SECTION */}
+            <li>
+              <Link to="/contact" onClick={closeMenu}>Contact</Link>
+            </li>
+
+            {/* CART */}
             {isLoggedIn && (
-              <>
-                {/* CART */}
-                <li className="cart-icon">
-                  <Link to="/cart">
-                    <FaShoppingCart />
-                    {totalItems > 0 && (
-                      <span className="cart-badge">{totalItems}</span>
-                    )}
-                  </Link>
-                </li>
-
-                {/* MY ORDERS */}
-                <li>
-                  <Link to="/myorders">My Orders</Link>
-                </li>
-
-                {/* ADMIN */}
-                {isAdmin && (
-                  <li>
-                    <Link to="/admin">Admin</Link>
-                  </li>
-                )}
-              </>
+              <li className="cart-icon">
+                <Link to="/cart" onClick={closeMenu}>
+                  <FaShoppingCart />
+                  {totalItems > 0 && (
+                    <span className="cart-badge">{totalItems}</span>
+                  )}
+                </Link>
+              </li>
             )}
 
-            {/* AUTH BUTTON */}
+           
+
+            {/* ADMIN */}
+            {isLoggedIn && isAdmin && (
+              <li>
+                <Link to="/admin" onClick={closeMenu}>Admin</Link>
+              </li>
+            )}
+
+            {/* AUTH */}
             <li>
               <button
                 className="auth-btn"
-                onClick={isLoggedIn ? handleLogout : openLogin}
+                onClick={() => {
+                  isLoggedIn ? handleLogout() : openLogin();
+                  closeMenu();
+                }}
               >
                 {isLoggedIn ? "Logout" : "Login"}
               </button>

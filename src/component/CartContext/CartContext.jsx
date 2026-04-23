@@ -12,18 +12,15 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+  // ✅ ADD TO CART (NO DUPLICATES + NO INCREMENT)
   const addToCart = (item) => {
     setCart((prev) => {
-      const exist = prev.find((i) => i._id === item._id);
+      const exists = prev.find((p) => p._id === item._id);
 
-      if (exist) {
-        return prev.map((i) =>
-          i._id === item._id
-            ? { ...i, quantity: i.quantity + 1 }
-            : i
-        );
-      }
+      // لو موجود → مفيش أي تغيير
+      if (exists) return prev;
 
+      // لو جديد → ضيفه بكمية 1
       return [...prev, { ...item, quantity: 1 }];
     });
   };
@@ -54,15 +51,13 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  const clearCart = () => {
-    setCart([]);
-    localStorage.removeItem("cart");
-  };
+  const clearCart = () => setCart([]);
 
   return (
     <CartContext.Provider
       value={{
         cart,
+        setCart,
         addToCart,
         removeFromCart,
         increaseQty,

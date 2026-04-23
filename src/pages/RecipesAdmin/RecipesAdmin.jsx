@@ -121,6 +121,7 @@ const AdminRecipes = () => {
       });
       closeForm(); // التحديث سيحدث تلقائياً عبر السوكت
     } catch (err) {
+      console.error(err);
       alert("Error creating recipe");
     } finally {
       setLoading(false);
@@ -136,6 +137,7 @@ const AdminRecipes = () => {
       });
       closeForm(); // التحديث سيحدث تلقائياً عبر السوكت
     } catch (err) {
+      console.error(err);
       alert("Error updating recipe");
     } finally {
       setLoading(false);
@@ -150,6 +152,7 @@ const AdminRecipes = () => {
       });
       // التحديث سيحدث تلقائياً عبر السوكت
     } catch (err) {
+      console.error(err);
       alert("Delete failed");
     }
   };
@@ -256,3 +259,5 @@ const styles = {
   save: { flex: 1, background: "#28a745", border: "none", padding: 12, color: "#fff", borderRadius: 8, cursor: "pointer", fontWeight: "bold" },
   cancel: { flex: 1, background: "#555", border: "none", padding: 12, color: "#fff", borderRadius: 8, cursor: "pointer", fontWeight: "bold" },
 };
+
+

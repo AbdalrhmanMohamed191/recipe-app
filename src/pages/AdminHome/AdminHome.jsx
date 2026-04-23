@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api/api";
-// import axios from "axios";
 
-const AdminHome = () => {
-  const [stats, setStats] = useState(null);
+const AdminDashboard = () => {
+  const [stats, setStats] = useState({
+    users: 0,
+    recipes: 0,
+    orders: 0,
+    contacts : 0,
+    totalRevenue: 0,
+    deliveryRevenue: 0,
+  });
 
+  const [loading, setLoading] = useState(true);
 
+  // =====================
+  // FETCH STATS
+  // =====================
   const fetchStats = async () => {
     try {
       const res = await api.get(
@@ -14,125 +24,90 @@ const AdminHome = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+          
+        },
       );
 
       setStats(res.data);
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchStats();
 
-    const interval = setInterval(fetchStats, 5000);
+    const interval = setInterval(fetchStats, 10000);
     return () => clearInterval(interval);
   }, []);
 
-  if (!stats)
-    return (
-      <div style={{ color: "#fff", textAlign: "center", marginTop: "100px" }}>
-        Loading dashboard...
-      </div>
-    );
 
+  // LOADING
+  if (loading)
+    return <h4 className="text-center mt-5">Loading dashboard...</h4>;
+
+ 
+  // UI 
   return (
-    <div style={styles.page}>
-      <h1 style={styles.title}>📊 Admin Dashboard</h1>
+    <div className="container py-5 mt-5">
 
-      <div style={styles.grid}>
-        <Card title="Users" value={stats.users} color="#4f46e5" />
-        <Card title="Recipes" value={stats.recipes} color="#0ea5e9" />
-        <Card title="Orders" value={stats.orders} color="#f59e0b" />
-        <Card
-          title="Revenue"
-          value={`${stats.revenue} EGP`}
-          color="#22c55e"
-          big
-        />
+      <h2 className="mb-4">📊 Admin Dashboard</h2>
+
+      <div className="row g-3">
+
+        {/* USERS */}
+        <div className="col-md-3">
+          <div className="card bg-dark text-white text-center p-3">
+            <h5>Users</h5>
+            <h3>{stats.users}</h3>
+          </div>
+        </div>
+
+        {/* RECIPES */}
+        <div className="col-md-3">
+          <div className="card bg-dark text-white text-center p-3">
+            <h5>Recipes</h5>
+            <h3>{stats.recipes}</h3>
+          </div>
+        </div>
+
+        {/* ORDERS */}
+        <div className="col-md-3">
+          <div className="card bg-dark text-white text-center p-3">
+            <h5>Orders</h5>
+            <h3>{stats.orders}</h3>
+          </div>
+        </div>
+
+        {/* TOTAL REVENUE */}
+        <div className="col-md-3">
+          <div className="card bg-success text-white text-center p-3">
+            <h5>Total Revenue</h5>
+            <h3>{stats.revenue} EGP</h3>
+          </div>
+        </div>
+
+        {/* DELIVERY REVENUE */}
+        <div className="col-md-3">
+          <div className="card bg-primary text-white text-center p-3">
+            <h5>Delivery Fees</h5>
+            <h3>{stats.deliveryFee} EGP</h3>
+          </div>
+        </div>
+
+        {/* CONTACTS */}
+        <div className="col-md-3">
+          <div className="card bg-danger text-white text-center p-3">
+            <h5>Contacts</h5>
+            <h3>{stats.contacts}</h3>
+          </div>
+        </div>
+
       </div>
     </div>
   );
 };
 
-const Card = ({ title, value, color, big }) => {
-  return (
-    <div
-      style={{
-        ...styles.card,
-        borderLeft: `5px solid ${color}`,
-      }}
-    >
-      <h4 style={styles.cardTitle}>{title}</h4>
-
-      <h2
-        style={{
-          ...styles.value,
-          color: big ? "#22c55e" : "#fff",
-        }}
-      >
-        {value}
-      </h2>
-
-      <div
-        style={{
-          ...styles.bar,
-          background: color,
-        }}
-      />
-    </div>
-  );
-};
-
-const styles = {
-  page: {
-    padding: "30px",
-    color: "#fff",
-    minHeight: "100vh",
-    background: "#0f0f0f",
-  },
-
-  title: {
-    marginBottom: "25px",
-    fontSize: "28px",
-    fontWeight: "bold",
-  },
-
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "20px",
-  },
-
-  card: {
-    background: "#1a1a1a",
-    padding: "20px",
-    borderRadius: "15px",
-    position: "relative",
-    transition: "0.3s",
-    cursor: "pointer",
-  },
-
-  cardTitle: {
-    fontSize: "16px",
-    opacity: 0.7,
-  },
-
-  value: {
-    fontSize: "28px",
-    marginTop: "10px",
-  },
-
-  bar: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    height: "4px",
-    width: "100%",
-    borderBottomLeftRadius: "15px",
-    borderBottomRightRadius: "15px",
-  },
-};
-
-export default AdminHome;
+export default AdminDashboard;

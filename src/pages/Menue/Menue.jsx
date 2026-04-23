@@ -19,7 +19,7 @@ import { useCart } from "../../component/CartContext/CartContext";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api";
 import { baseUrlHandler } from "../../utils/baseUrlHandler";
-import socket from "../../socket/socket"; // 1. استيراد السوكت
+import socket from "../../socket/socket"; 
 
 // const categories = [
 //   "all", "burger", "pizza", "pasta", "chicken", "drinks", "dessert"

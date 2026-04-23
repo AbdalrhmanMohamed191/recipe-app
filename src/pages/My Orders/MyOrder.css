@@ -142,7 +142,19 @@
   width: 100%;
   background: #e74c3c;
 }
-
+.btn-outline{
+  background: linear-gradient(135deg, #ff3d77dc, #ff9a3d);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  border-radius: 8px;
+  color: #fff;
+}
+.btn-outline:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(255, 61, 119, 0.35);
+  transition: 0.3s;
+}
 /* RESPONSIVE */
 @media (max-width: 600px) {
   .title {
