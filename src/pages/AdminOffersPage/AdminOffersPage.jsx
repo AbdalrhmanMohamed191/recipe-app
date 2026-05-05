@@ -443,13 +443,18 @@ const AdminOffersPage = () => {
 
   // ================= TOGGLE =================
   const handleToggle = async (id) => {
-    try {
-      await api.patch(`/api/v1/offers/${id}/toggle`);
-      fetchOffers(); // مهم جدًا
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  try {
+    const res = await api.patch(`/api/v1/offers/${id}/toggle`);
+
+    // تحديث مباشر بدون انتظار fetch
+    setOffers((prev) =>
+      prev.map((o) => (o._id === id ? res.data : o))
+    );
+
+  } catch (err) {
+    console.log("TOGGLE ERROR:", err);
+  }
+};
 
   // ================= EDIT =================
   const handleEdit = (o) => {

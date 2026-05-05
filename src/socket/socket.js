@@ -7,7 +7,8 @@ const URL =
 
 const socket = io(URL, {
   autoConnect: false,
-  transports: ["websocket"], // مهم للاستقرار في production
+  
+  transports: ["websocket" , "polling"], // مهم للاستقرار في production
 });
 
 export default socket;

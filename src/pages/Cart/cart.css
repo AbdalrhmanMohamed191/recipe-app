@@ -13,7 +13,8 @@
   font-size: 22px;
   font-weight: bold;
   margin: 0;
-  color: #111;
+
+  color: var(--text-color);
 }
 
 /* زرار My Orders */
@@ -28,8 +29,8 @@
   font-size: 14px;
   font-weight: 600;
 
-  color: #fff;
-  background: linear-gradient(135deg, #111, #333);
+  color: var(--btn-text);
+  background: var(--btn-bg);
 
   transition: all 0.2s ease;
 }
@@ -38,6 +39,7 @@
   transform: translateY(-2px);
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
 }
+
 @media (max-width: 768px) {
   .cart-header {
     margin-top: 60px;
@@ -52,4 +54,102 @@
     padding: 7px 10px;
     border-radius: 8px;
   }
+}
+
+
+.cart-container {
+  max-width: 750px;
+  margin: auto;
+  padding: 20px;
+  margin-top: 90px;
+  color: var(--text);
+}
+
+/* HEADER */
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cart-header h2 {
+  margin: 0;
+}
+
+/* SUMMARY */
+.cart-summary {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  margin: 15px 0;
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--text);
+}
+
+/* ITEMS */
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: var(--card);
+  padding: 15px;
+  margin-bottom: 12px;
+
+  border-radius: 14px;
+  transition: 0.3s;
+}
+
+.cart-item:hover {
+  transform: translateY(-3px);
+}
+
+/* ACTIONS */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #eee;
+}
+
+.actions .delete {
+  background: #ff4d4f;
+  color: #fff;
+}
+
+/* ADDRESS */
+.address input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* BUTTON */
+.confirm-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+
+  border: none;
+  border-radius: 12px;
+
+  color: #fff;
+  background: linear-gradient(135deg, #28a745, #218838);
+
+  cursor: pointer;
+}
+
+/* EMPTY */
+.empty {
+  text-align: center;
+  color: gray;
 }

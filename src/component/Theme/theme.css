@@ -1,0 +1,21 @@
+/* LIGHT THEME */
+body[data-theme="light"] {
+  --bg-color: #ffffff;
+  --text-color: #111;
+  --nav-color: #f8f8f8;
+  --primary: #ff4d4d;
+}
+
+/* DARK THEME */
+body[data-theme="dark"] {
+  --bg-color: #121212;
+  --text-color: #ffffff;
+  --nav-color: #1e1e1e;
+  --primary: #ff4d4d;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: 0.3s ease;
+}

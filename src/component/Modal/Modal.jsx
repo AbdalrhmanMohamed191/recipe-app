@@ -39,7 +39,7 @@ const Modal = ({ closeModal, children }) => {
             alignItems: "center",
           }}
         >
-          <h5 style={{ margin: 0, fontWeight: "600" }}>Welcome 👋</h5>
+          <h5 style={{ margin: 0, fontWeight: "600" , color: "#333" }}>Welcome 👋</h5>
 
           <button
             onClick={closeModal}

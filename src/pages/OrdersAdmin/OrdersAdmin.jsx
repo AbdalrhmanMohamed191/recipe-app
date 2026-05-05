@@ -71,8 +71,7 @@ const OrdersAdmin = () => {
   // TIME FORMAT
   // =====================
   const formatTime = (date) => {
-    const d = new Date(date);
-    return d.toLocaleString("en-EG", {
+    return new Date(date).toLocaleString("en-EG", {
       weekday: "short",
       hour: "2-digit",
       minute: "2-digit",
@@ -97,9 +96,7 @@ const OrdersAdmin = () => {
 
       <h2 className="mb-4">📦 Orders Dashboard</h2>
 
-      {/* =====================
-          STATS
-      ===================== */}
+      {/* ===================== STATS ===================== */}
       <div className="row g-3 mb-4">
         <div className="col-12 col-md-4">
           <div className="card text-bg-dark p-3 text-center">
@@ -123,9 +120,7 @@ const OrdersAdmin = () => {
         </div>
       </div>
 
-      {/* =====================
-          FILTERS
-      ===================== */}
+      {/* ===================== FILTERS ===================== */}
       <div className="d-flex flex-wrap gap-2 mb-4">
 
         <button
@@ -160,22 +155,20 @@ const OrdersAdmin = () => {
         />
       </div>
 
-      {/* =====================
-          EMPTY STATE
-      ===================== */}
+      {/* ===================== EMPTY ===================== */}
       {orders.length === 0 ? (
         <div className="alert alert-info">No orders found</div>
       ) : (
         <>
-          {/* =====================
-              DESKTOP TABLE
-          ===================== */}
+          {/* ===================== TABLE ===================== */}
           <div className="table-responsive d-none d-md-block">
             <table className="table table-dark table-hover align-middle">
+
               <thead>
                 <tr>
                   <th>User</th>
                   <th>Phone</th>
+                  <th>Address</th>
                   <th>Items</th>
                   <th>Total</th>
                   <th>Status</th>
@@ -189,19 +182,37 @@ const OrdersAdmin = () => {
                   <tr key={order._id}>
                     <td>{order.userId?.name}</td>
                     <td>{order.userId?.phone}</td>
-                    <td>{order.items?.map((i) => i.title).join(", ")}</td>
+
+                    {/* ADDRESS FIXED */}
+                    <td>
+                      <div>
+                        <div><strong>Street:</strong> {order.address?.street}</div>
+                        <div><strong>City:</strong> {order.address?.city}</div>
+
+                        {order.address?.notes && (
+                          <div><strong>Notes:</strong> {order.address?.notes}</div>
+                        )}
+                      </div>
+                    </td>
+
+                    <td>
+                      {order.items?.map((i) => i.title).join(", ")}
+                    </td>
+
                     <td>{order.totalPrice} EGP</td>
 
                     <td>
-                      <span className={`badge ${
-                        order.status === "delivered"
-                          ? "bg-success"
-                          : order.status === "preparing"
-                          ? "bg-warning text-dark"
-                          : order.status === "cancelled"
-                          ? "bg-danger"
-                          : "bg-secondary"
-                      }`}>
+                      <span
+                        className={`badge ${
+                          order.status === "delivered"
+                            ? "bg-success"
+                            : order.status === "preparing"
+                            ? "bg-warning text-dark"
+                            : order.status === "cancelled"
+                            ? "bg-danger"
+                            : "bg-secondary"
+                        }`}
+                      >
                         {order.status || "pending"}
                       </span>
                     </td>
@@ -214,27 +225,21 @@ const OrdersAdmin = () => {
                       <div className="d-flex gap-1 flex-wrap">
                         <button
                           className="btn btn-sm btn-warning"
-                          onClick={() =>
-                            updateStatus(order._id, "preparing")
-                          }
+                          onClick={() => updateStatus(order._id, "preparing")}
                         >
                           Prep
                         </button>
 
                         <button
                           className="btn btn-sm btn-success"
-                          onClick={() =>
-                            updateStatus(order._id, "delivered")
-                          }
+                          onClick={() => updateStatus(order._id, "delivered")}
                         >
                           Done
                         </button>
 
                         <button
                           className="btn btn-sm btn-danger"
-                          onClick={() =>
-                            updateStatus(order._id, "cancelled")
-                          }
+                          onClick={() => updateStatus(order._id, "cancelled")}
                         >
                           X
                         </button>
@@ -243,32 +248,25 @@ const OrdersAdmin = () => {
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
 
-          {/* =====================
-              MOBILE CARDS
-          ===================== */}
+          {/* ===================== MOBILE ===================== */}
           <div className="d-md-none">
             {orders.map((order) => (
-              <div
-                key={order._id}
-                className="card bg-dark text-white mb-3 p-3"
-              >
+              <div key={order._id} className="card bg-dark text-white mb-3 p-3">
+
                 <div className="d-flex justify-content-between">
                   <strong>{order.userId?.name}</strong>
-
                   <span className="badge bg-secondary">
                     {order.status || "pending"}
                   </span>
                 </div>
 
-                <small className="text-muted">
-                  {order.userId?.phone}
-                </small>
+                <small>{order.userId?.phone}</small>
 
                 <div className="mt-2">
-                  <strong>Items:</strong>{" "}
                   {order.items?.map((i) => i.title).join(", ")}
                 </div>
 
@@ -276,41 +274,43 @@ const OrdersAdmin = () => {
                   <strong>Total:</strong> {order.totalPrice} EGP
                 </div>
 
+                {/* ADDRESS MOBILE */}
+                <div className="mt-2">
+                  <div><strong>Street:</strong> {order.address?.street}</div>
+                  <div><strong>City:</strong> {order.address?.city}</div>
+                </div>
+
                 <small className="text-muted d-block mt-1">
                   {formatTime(order.createdAt)}
                 </small>
 
-                <div className="d-flex gap-2 mt-3 flex-wrap">
+                <div className="d-flex gap-2 mt-3">
                   <button
                     className="btn btn-sm btn-warning"
-                    onClick={() =>
-                      updateStatus(order._id, "preparing")
-                    }
+                    onClick={() => updateStatus(order._id, "preparing")}
                   >
                     Prep
                   </button>
 
                   <button
                     className="btn btn-sm btn-success"
-                    onClick={() =>
-                      updateStatus(order._id, "delivered")
-                    }
+                    onClick={() => updateStatus(order._id, "delivered")}
                   >
                     Done
                   </button>
 
                   <button
                     className="btn btn-sm btn-danger"
-                    onClick={() =>
-                      updateStatus(order._id, "cancelled")
-                    }
+                    onClick={() => updateStatus(order._id, "cancelled")}
                   >
                     Cancel
                   </button>
                 </div>
+
               </div>
             ))}
           </div>
+
         </>
       )}
     </div>

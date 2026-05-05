@@ -7,7 +7,7 @@ const About = () => {
       {/* HERO */}
       <div className="container py-5 text-center mt-5">
         <h1 className="fw-bold display-5">
-          About <span className="mt-3">roosst</span>
+          About <span className="mt-3"><span className="text-warning">Us</span></span>
         </h1>
         <p className="text-secondary mt-3">
           Burgers • Crepes • Real Flavor Experience
@@ -31,7 +31,7 @@ const About = () => {
           <div className="col-md-6">
             <h3 className="text-warning fw-bold">Our Story</h3>
             <p className="text-secondary mt-3">
-              Rancho's is all about bringing you the best burgers and crepes
+              "Our story" is all about bringing you the best burgers and crepes
               with a bold homemade taste and premium quality ingredients.
             </p>
 
@@ -47,7 +47,7 @@ const About = () => {
       {/* VALUES */}
       <div className="container py-5">
         <h3 className="text-center text-warning mb-4 fw-bold">
-          Why Rancho's?
+          Why Choose Us
         </h3>
 
         <div className="row text-center g-4">

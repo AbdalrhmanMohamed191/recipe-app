@@ -65,7 +65,8 @@ const Navbar = () => {
 
           {/* LOGO */}
           <div className="logo">
-            <img src={img_2} alt="Logo" />
+            {/* <img src={img_2} alt="Logo" /> */}
+            <h2>🍔 Logo</h2>
           </div>
 
           {/* HAMBURGER */}

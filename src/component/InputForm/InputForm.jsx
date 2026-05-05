@@ -91,7 +91,7 @@ const InputForm = ({ closeModal }) => {
 
   return (
     <form onSubmit={handleSubmit} style={{ width: "100%", display: "flex", flexDirection: "column", gap: "12px" }}>
-      <h4 className="text-center fw-bold mb-2">
+      <h4 className="text-center fw-bold mb-2 text-black">
         {onSignUp ? "Create Account 🚀" : "Welcome Back 👋"}
       </h4>
 
