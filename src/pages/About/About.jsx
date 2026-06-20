@@ -79,7 +79,7 @@ const About = () => {
       {/* FOOTER */}
       <div className="container text-center py-4 border-top border-secondary">
         <p className="text-secondary mb-0">
-          © {new Date().getFullYear()} Rancho's. All rights reserved.
+          © {new Date().getFullYear()} Our Restaurant. All rights reserved.
         </p>
       </div>
 
