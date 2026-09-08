@@ -1,116 +1,478 @@
-.offers-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
+/* =========================================================
+   OFFER CARD
+========================================================= */
 
-/* CARD */
 .offer-card-modern {
-  background: #fff;
-  border-radius: 18px;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  transition: 0.3s;
-  cursor: pointer;
+
+  background: #ffffff;
+
+  border: 1px solid #e8e8e8;
+  border-radius: 22px;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.06);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+
+  box-sizing: border-box;
 }
 
 .offer-card-modern:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+  transform: translateY(-7px);
+
+  border-color: #ffd6c5;
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.11);
 }
 
-/* IMAGE */
+/* =========================================================
+   IMAGE
+========================================================= */
+
 .offer-image {
+  width: 100%;
+  height: 225px;
+
   position: relative;
-  height: 200px;
+
+  overflow: hidden;
+
+  background: #f3f3f3;
 }
 
 .offer-image img {
   width: 100%;
   height: 100%;
+
+  display: block;
+
   object-fit: cover;
-  transition: 0.4s;
+
+  transition: transform 0.5s ease;
 }
 
-.offer-card-modern:hover img {
-  transform: scale(1.1);
+.offer-card-modern:hover .offer-image img {
+  transform: scale(1.06);
 }
 
-/* BADGE */
+/* =========================================================
+   IMAGE OVERLAY
+========================================================= */
+
+.offer-image-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.08),
+      transparent 45%,
+      rgba(0, 0, 0, 0.28)
+    );
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   DISCOUNT BADGE
+========================================================= */
+
 .discount-badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  background: red;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-}
 
-/* BODY */
-.offer-body {
-  padding: 15px;
-}
+  top: 14px;
+  left: 14px;
 
-.offer-title {
-  font-size: 18px;
-  font-weight: bold;
-}
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-.offer-desc {
+  padding: 8px 12px;
+
+  border-radius: 10px;
+
+  background: #ff4d2d;
+
+  color: #ffffff;
+
   font-size: 13px;
-  color: #666;
-  margin: 5px 0;
+  font-weight: 800;
+
+  box-shadow:
+    0 7px 18px rgba(255, 77, 45, 0.3);
+
+  z-index: 2;
 }
 
-/* PRICE */
-.offer-price {
-  display: flex;
-  gap: 10px;
-  margin: 10px 0;
-}
-
-.old-price {
-  text-decoration: line-through;
-  color: #aaa;
-}
-
-.new-price {
-  font-weight: bold;
-  color: #2ecc71;
-}
-
-/* BUTTON */
-.order-btn {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #ff4d4d, #ff1f1f);
-  color: white;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.order-btn:hover {
-  transform: scale(1.05);
-}
+/* =========================================================
+   STATUS
+========================================================= */
 
 .status-badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 5px 10px;
-  border-radius: 20px;
+
+  top: 14px;
+  right: 14px;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 8px 11px;
+
+  border-radius: 10px;
+
   font-size: 12px;
-  color: #fff;
+  font-weight: 700;
+
+  backdrop-filter: blur(8px);
+
+  z-index: 2;
 }
 
 .status-badge.active {
-  background: #28a745;
+  background: rgba(255, 255, 255, 0.93);
+
+  color: #15803d;
 }
 
 .status-badge.disabled {
-  background: #dc3545;
+  background: rgba(255, 255, 255, 0.93);
+
+  color: #dc2626;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: currentColor;
+}
+
+/* =========================================================
+   BODY
+========================================================= */
+
+.offer-body {
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+
+  padding: 19px;
+}
+
+/* =========================================================
+   RESTAURANT
+========================================================= */
+
+.offer-restaurant {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  padding-bottom: 15px;
+
+  margin-bottom: 15px;
+
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.restaurant-logo {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  border-radius: 12px;
+
+  background: #fff3ec;
+
+  border: 1px solid #ffe0d1;
+}
+
+.restaurant-logo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.restaurant-logo span {
+  font-size: 21px;
+}
+
+.restaurant-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.restaurant-label {
+  margin-bottom: 2px;
+
+  color: #a1a1aa;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.restaurant-name {
+  overflow: hidden;
+
+  color: #292929;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.offer-title {
+  margin: 0 0 9px;
+
+  color: #18181b;
+
+  font-size: 21px;
+  line-height: 1.3;
+
+  font-weight: 800;
+
+  word-break: break-word;
+}
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.offer-desc {
+  margin: 0 0 17px;
+
+  color: #71717a;
+
+  font-size: 14px;
+  line-height: 1.65;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+
+  overflow: hidden;
+}
+
+/* =========================================================
+   PRICE SECTION
+========================================================= */
+
+.offer-price-section {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-top: auto;
+
+  padding-top: 5px;
+  padding-bottom: 17px;
+}
+
+.offer-price {
+  display: flex;
+  align-items: baseline;
+
+  gap: 9px;
+
+  flex-wrap: wrap;
+}
+
+.old-price {
+  color: #a1a1aa;
+
+  font-size: 13px;
+
+  text-decoration: line-through;
+}
+
+.new-price {
+  color: #ff4d2d;
+
+  font-size: 23px;
+  font-weight: 900;
+}
+
+.save-text {
+  color: #16a34a;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+/* =========================================================
+   ORDER BUTTON
+========================================================= */
+
+.order-btn {
+  width: 100%;
+  min-height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  border: none;
+  border-radius: 13px;
+
+  background: #ff4d2d;
+
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 18px rgba(255, 77, 45, 0.2);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.order-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  background: #f04425;
+
+  box-shadow:
+    0 11px 25px rgba(255, 77, 45, 0.28);
+}
+
+.order-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.order-btn:disabled {
+  cursor: not-allowed;
+
+  background: #d4d4d8;
+
+  color: #ffffff;
+
+  box-shadow: none;
+}
+
+.order-icon {
+  font-size: 17px;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+  .offer-image {
+    height: 210px;
+  }
+
+  .offer-body {
+    padding: 17px;
+  }
+
+  .offer-title {
+    font-size: 19px;
+  }
+
+  .offer-desc {
+    font-size: 13px;
+  }
+
+  .new-price {
+    font-size: 21px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+  .offer-card-modern {
+    border-radius: 19px;
+  }
+
+  .offer-image {
+    height: 220px;
+  }
+
+  .offer-body {
+    padding: 16px;
+  }
+
+  .offer-restaurant {
+    padding-bottom: 13px;
+    margin-bottom: 13px;
+  }
+
+  .restaurant-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .offer-title {
+    font-size: 20px;
+  }
+
+  .offer-desc {
+    font-size: 14px;
+    line-height: 1.6;
+
+    -webkit-line-clamp: 4;
+  }
+
+  .offer-price-section {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 5px;
+  }
+
+  .save-text {
+    font-size: 12px;
+  }
 }

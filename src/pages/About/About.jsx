@@ -1,93 +1,348 @@
 import React from "react";
+import {
+  FaUtensils,
+  FaStore,
+  FaHeart,
+  FaBolt,
+  FaStar,
+  FaArrowRight,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import "./About.css";
 
 const About = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="bg-dark text-white">
+    <main className="about-page">
 
-      {/* HERO */}
-      <div className="container py-5 text-center mt-5">
-        <h1 className="fw-bold display-5">
-          About <span className="mt-3"><span className="text-warning">Us</span></span>
-        </h1>
-        <p className="text-secondary mt-3">
-          Burgers • Crepes • Real Flavor Experience
-        </p>
-      </div>
+      {/* =====================================================
+          HERO
+      ===================================================== */}
 
-      {/* STORY */}
-      <div className="container py-4">
-        <div className="row align-items-center g-4">
+      <section className="about-hero">
 
-          {/* IMAGE (Burger / Crepe) */}
-          <div className="col-md-6">
-            <img
-              src="https://images.unsplash.com/photo-1550547660-d9450f859349"
-              alt="burger food"
-              className="img-fluid rounded shadow"
-            />
-          </div>
+        <div className="about-hero-content">
 
-          {/* TEXT */}
-          <div className="col-md-6">
-            <h3 className="text-warning fw-bold">Our Story</h3>
-            <p className="text-secondary mt-3">
-              "Our story" is all about bringing you the best burgers and crepes
-              with a bold homemade taste and premium quality ingredients.
-            </p>
+          <span className="about-label">
+            ABOUT FAMY
+          </span>
 
-            <p className="text-secondary">
-              We combine juicy burgers, sweet & savory crepes, and fast service
-              to give you a full food experience you’ll love.
-            </p>
-          </div>
+          <h1>
+            Good Food.
+            <br />
+            <span>Great Choices.</span>
+          </h1>
 
-        </div>
-      </div>
+          <p>
+            FAMY is your place to discover restaurants,
+            explore delicious food, and order your
+            favorite meals — all in one place.
+          </p>
 
-      {/* VALUES */}
-      <div className="container py-5">
-        <h3 className="text-center text-warning mb-4 fw-bold">
-          Why Choose Us
-        </h3>
+          <div className="about-hero-buttons">
 
-        <div className="row text-center g-4">
+            <button
+              className="about-primary-btn"
+              onClick={() => navigate("/restaurants")}
+            >
+              Explore Restaurants
+              <FaArrowRight />
+            </button>
 
-          <div className="col-md-4">
-            <h5>🍔 Juicy Burgers</h5>
-            <p className="text-secondary">
-              Fresh beef, melted cheese, and perfect grill taste.
-            </p>
-          </div>
+            <button
+              className="about-secondary-btn"
+              onClick={() => navigate("/contact")}
+            >
+              Contact Us
+            </button>
 
-          <div className="col-md-4">
-            <h5>🥞 Delicious Crepes</h5>
-            <p className="text-secondary">
-              Sweet and savory crepes made fresh daily.
-            </p>
-          </div>
-
-          <div className="col-md-4">
-            <h5>⚡ Fast & Fresh</h5>
-            <p className="text-secondary">
-              Quick service without losing quality.
-            </p>
           </div>
 
         </div>
-      </div>
 
-      {/* FOOTER */}
-      <div className="container text-center py-4 border-top border-secondary">
-        <p className="text-secondary mb-0">
-          © {new Date().getFullYear()} Our Restaurant. All rights reserved.
+
+        {/* FOOD VISUAL */}
+
+        <div className="about-hero-visual">
+
+          <div className="food-glow"></div>
+
+          <div className="food-circle">
+            🍔
+          </div>
+
+          <div className="floating-card card-one">
+            <FaStar />
+            <div>
+              <strong>Great Taste</strong>
+              <span>Made with love</span>
+            </div>
+          </div>
+
+          <div className="floating-card card-two">
+            <FaUtensils />
+            <div>
+              <strong>Many Choices</strong>
+              <span>Restaurants & menus</span>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* =====================================================
+          STATS
+      ===================================================== */}
+
+      <section className="about-stats">
+
+        <div className="stat-item">
+          <strong>10+</strong>
+          <span>Restaurants</span>
+        </div>
+
+        <div className="stat-item">
+          <strong>100+</strong>
+          <span>Food Choices</span>
+        </div>
+
+        <div className="stat-item">
+          <strong>1000+</strong>
+          <span>Happy Orders</span>
+        </div>
+
+        <div className="stat-item">
+          <strong>24/7</strong>
+          <span>Easy Ordering</span>
+        </div>
+
+      </section>
+
+
+      {/* =====================================================
+          OUR STORY
+      ===================================================== */}
+
+      <section className="about-story">
+
+        <div className="story-image">
+
+          <img
+            src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1000&q=85"
+            alt="Delicious burger"
+          />
+
+          <div className="story-badge">
+            <FaHeart />
+            <span>
+              Made for
+              <strong>Food Lovers</strong>
+            </span>
+          </div>
+
+        </div>
+
+
+        <div className="story-content">
+
+          <span className="about-label">
+            OUR STORY
+          </span>
+
+          <h2>
+            More than just
+            <span> food.</span>
+          </h2>
+
+          <p>
+            FAMY was created to make discovering great food
+            easier, faster, and more enjoyable.
+          </p>
+
+          <p>
+            Instead of searching through countless places,
+            FAMY brings restaurants and their menus together
+            in one simple experience. Whether you're looking
+            for a juicy burger, a delicious crepe, or something
+            completely new, there's always something waiting
+            for you.
+          </p>
+
+          <div className="story-points">
+
+            <div>
+              <FaHeart />
+              <span>
+                <strong>Made for Food Lovers</strong>
+                <small>
+                  Discover meals you'll actually love.
+                </small>
+              </span>
+            </div>
+
+            <div>
+              <FaBolt />
+              <span>
+                <strong>Simple & Fast</strong>
+                <small>
+                  Find your food without the hassle.
+                </small>
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* =====================================================
+          WHY FAMY
+      ===================================================== */}
+
+      <section className="why-famy">
+
+        <div className="section-heading">
+
+          <span className="about-label">
+            WHY FAMY
+          </span>
+
+          <h2>
+            Everything you need,
+            <span> in one place.</span>
+          </h2>
+
+          <p>
+            We keep food discovery simple, enjoyable,
+            and focused on what really matters.
+          </p>
+
+        </div>
+
+
+        <div className="features-grid">
+
+          <div className="feature-card">
+
+            <div className="feature-icon">
+              <FaStore />
+            </div>
+
+            <h3>
+              Discover Restaurants
+            </h3>
+
+            <p>
+              Explore different restaurants and
+              find the perfect place for your next meal.
+            </p>
+
+          </div>
+
+
+          <div className="feature-card">
+
+            <div className="feature-icon">
+              <FaUtensils />
+            </div>
+
+            <h3>
+              Explore Menus
+            </h3>
+
+            <p>
+              Browse menus, discover new dishes,
+              and choose exactly what you're craving.
+            </p>
+
+          </div>
+
+
+          <div className="feature-card">
+
+            <div className="feature-icon">
+              <FaBolt />
+            </div>
+
+            <h3>
+              Easy Ordering
+            </h3>
+
+            <p>
+              A smooth ordering experience designed
+              to get you from hungry to happy faster.
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* =====================================================
+          CTA
+      ===================================================== */}
+
+      <section className="about-cta">
+
+        <div>
+
+          <span>
+            READY TO EAT?
+          </span>
+
+          <h2>
+            Your next favorite meal
+            <br />
+            is waiting for you.
+          </h2>
+
+          <p>
+            Explore restaurants and discover
+            something delicious today.
+          </p>
+
+          <button
+            onClick={() => navigate("/restaurants")}
+          >
+            Find a Restaurant
+            <FaArrowRight />
+          </button>
+
+        </div>
+
+      </section>
+
+
+      {/* =====================================================
+          FOOTER
+      ===================================================== */}
+
+      <footer className="about-footer">
+
+        <div className="footer-logo">
+          <span>FA</span>
+          <strong>MY</strong>
+        </div>
+
+        <p>
+          Discover. Choose. Enjoy.
         </p>
-      </div>
 
-    </div>
+        <small>
+          © {new Date().getFullYear()} FAMY. All rights reserved.
+        </small>
+
+      </footer>
+
+    </main>
   );
 };
 
 export default About;
-
-
-

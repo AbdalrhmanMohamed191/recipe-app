@@ -9,6 +9,7 @@ const AdminDashboard = () => {
     contacts : 0,
     totalRevenue: 0,
     deliveryRevenue: 0,
+    restaurants: 0
   });
 
   const [loading, setLoading] = useState(true);
@@ -65,13 +66,13 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* RECIPES */}
+        {/* RECIPES
         <div className="col-md-3">
           <div className="card bg-dark text-white text-center p-3">
             <h5>Recipes</h5>
             <h3>{stats.recipes}</h3>
           </div>
-        </div>
+        </div> */}
 
         {/* ORDERS */}
         <div className="col-md-3">
@@ -94,6 +95,14 @@ const AdminDashboard = () => {
           <div className="card bg-primary text-white text-center p-3">
             <h5>Delivery Fees</h5>
             <h3>{stats.deliveryFee} EGP</h3>
+          </div>
+        </div>
+
+        {/* RESTAURANTS */}
+        <div className="col-md-3">
+          <div className="card bg-warning text-white text-center p-3">
+            <h5>Restaurants</h5>
+            <h3>{stats.restaurants}</h3>
           </div>
         </div>
 

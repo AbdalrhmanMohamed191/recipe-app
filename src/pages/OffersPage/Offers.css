@@ -1,7 +1,310 @@
-.deals-text {
-  font-family: sans-serif;
-  font-size: 14px;
-  color: #666;
-  margin: 5px 0 15px;
-  letter-spacing: 0.3px;
+/* =========================================================
+   OFFERS PAGE
+========================================================= */
+
+.offers-page {
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 90px 6% 60px;
+
+  background: #f8f9fb;
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.offers-header {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 0 auto 35px;
+
+  padding: 0 !important;
+
+  text-align: center;
+}
+
+/* Small label */
+
+.offers-header::before {
+  content: "🔥 SPECIAL DEALS";
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 7px 14px;
+
+  margin-bottom: 12px;
+
+  border-radius: 50px;
+
+  background: #fff1eb;
+
+  border: 1px solid #ffe0d4;
+
+  color: #ff4d2d;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  letter-spacing: 0.5px;
+}
+
+/* Title */
+
+.offers-header h2 {
+  margin: 0;
+
+  color: #18181b;
+
+  font-size: clamp(30px, 4vw, 44px);
+
+  font-weight: 900;
+
+  line-height: 1.15;
+
+  letter-spacing: -1px;
+}
+
+/* Subtitle */
+
+.offers-header .deals-text {
+  margin: 12px 0 0;
+
+  color: #777;
+
+  font-size: 15px;
+
+  line-height: 1.7;
+}
+
+/* =========================================================
+   OFFERS GRID
+========================================================= */
+
+.offers-grid {
+  width: 100%;
+  max-width: 1250px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(270px, 1fr)
+    );
+
+  gap: 25px;
+
+  align-items: stretch;
+}
+
+/* =========================================================
+   OFFER CARD WRAPPER
+========================================================= */
+
+.offers-grid > * {
+  min-width: 0;
+
+  width: 100%;
+
+  animation: offerCardAppear 0.45s ease both;
+}
+
+/* Slight animation difference */
+
+.offers-grid > *:nth-child(2) {
+  animation-delay: 0.04s;
+}
+
+.offers-grid > *:nth-child(3) {
+  animation-delay: 0.08s;
+}
+
+.offers-grid > *:nth-child(4) {
+  animation-delay: 0.12s;
+}
+
+.offers-grid > *:nth-child(5) {
+  animation-delay: 0.16s;
+}
+
+.offers-grid > *:nth-child(6) {
+  animation-delay: 0.2s;
+}
+
+@keyframes offerCardAppear {
+  from {
+    opacity: 0;
+
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading {
+  min-height: 300px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #777;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty {
+  width: 100%;
+  max-width: 700px;
+
+  min-height: 280px;
+
+  margin: 40px auto 0;
+
+  padding: 45px 25px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+
+  text-align: center;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px dashed #dedede;
+
+  border-radius: 22px;
+
+  color: #777;
+
+  font-size: 16px;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.04);
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 992px) {
+  .offers-page {
+    padding-left: 4%;
+    padding-right: 4%;
+  }
+
+  .offers-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+
+    gap: 20px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+  .offers-page {
+    padding: 80px 16px 45px;
+  }
+
+  .offers-header {
+    margin-bottom: 28px;
+  }
+
+  .offers-header::before {
+    font-size: 10px;
+
+    padding: 6px 11px;
+  }
+
+  .offers-header h2 {
+    font-size: 30px;
+
+    letter-spacing: -0.5px;
+  }
+
+  .offers-header .deals-text {
+    font-size: 13px;
+
+    margin-top: 9px;
+  }
+
+  .offers-grid {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+  }
+
+  .empty {
+    min-height: 240px;
+
+    margin-top: 25px;
+
+    padding: 35px 20px;
+
+    font-size: 14px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+  .offers-page {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+
+  .offers-header h2 {
+    font-size: 27px;
+  }
+
+  .offers-grid {
+    gap: 15px;
+  }
+}
+
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .offers-grid > * {
+    animation: none;
+  }
 }

@@ -1,40 +1,806 @@
+// import React, { useEffect, useState } from "react";
+// import api from "../../api/api";
+// import { baseUrlHandler } from "../../utils/baseUrlHandler";
+// import socket from "../../socket/socket";
+
+// const emptyForm = {
+//   title: "",
+//   ingredients: "",
+//   instructions: "",
+//   image: null,
+//   category: "",
+//   price: "",
+//   variants: [],
+// };
+
+// const categories = [
+//   "beef",
+//   "chicken",
+//   "pizza",
+//   "dessert",
+//   "seafood",
+//   "pasta",
+//   "salad",
+//   "soup",
+//   "burger",
+//   "drinks",
+//   "crepes",
+// ];
+
+// const AdminRecipes = () => {
+//   const [recipes, setRecipes] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [saving, setSaving] = useState(false);
+
+//   const [form, setForm] = useState(emptyForm);
+//   const [editingId, setEditingId] = useState(null);
+//   const [showForm, setShowForm] = useState(false);
+
+//   const token = localStorage.getItem("token");
+
+//   // ================= IMAGE =================
+//   const getImageUrl = (r) => {
+//     const img = r.CoverImage;
+
+//     if (!img) {
+//       return "https://via.placeholder.com/300x200";
+//     }
+
+//     if (img.startsWith("http")) {
+//       return img;
+//     }
+
+//     return `${baseUrlHandler()}/${img.replace(/^\/+/g, "")}`;
+//   };
+
+//   // ================= FETCH =================
+//   const fetchRecipes = async () => {
+//     try {
+//       setLoading(true);
+
+//       const res = await api.get("/api/v1/recipes", {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+
+//       setRecipes(res.data);
+//     } catch (err) {
+//       console.log(err);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchRecipes();
+
+//     socket.on("recipeCreated", (data) => {
+//       setRecipes((prev) => {
+//         const exists = prev.find((r) => r._id === data._id);
+
+//         if (exists) return prev;
+
+//         return [data, ...prev];
+//       });
+//     });
+
+//     socket.on("recipeUpdated", (data) => {
+//       setRecipes((prev) =>
+//         prev.map((r) => (r._id === data._id ? data : r))
+//       );
+//     });
+
+//     socket.on("recipeDeleted", (id) => {
+//       setRecipes((prev) => prev.filter((r) => r._id !== id));
+//     });
+
+//     return () => {
+//       socket.off("recipeCreated");
+//       socket.off("recipeUpdated");
+//       socket.off("recipeDeleted");
+//     };
+//   }, []);
+
+//   // ================= INPUT CHANGE =================
+//   const handleChange = (e) => {
+//     const { name, value, files } = e.target;
+
+//     if (name === "image") {
+//       setForm((prev) => ({
+//         ...prev,
+//         image: files[0],
+//       }));
+
+//       return;
+//     }
+
+//     // PRICE ONLY NUMBERS
+//     if (name === "price") {
+//       const onlyNumbers = value.replace(/[^0-9]/g, "");
+
+//       setForm((prev) => ({
+//         ...prev,
+//         price: onlyNumbers,
+//       }));
+
+//       return;
+//     }
+
+//     setForm((prev) => ({
+//       ...prev,
+//       [name]: value,
+//     }));
+//   };
+
+//   // ================= VARIANTS =================
+//   const handleVariant = (index, field, value) => {
+//     const updated = [...form.variants];
+
+//     if (field === "price") {
+//       value = value.replace(/[^0-9]/g, "");
+//     }
+
+//     updated[index][field] = value;
+
+//     setForm((prev) => ({
+//       ...prev,
+//       variants: updated,
+//     }));
+//   };
+
+//   const addVariant = () => {
+//     setForm((prev) => ({
+//       ...prev,
+//       variants: [
+//         ...prev.variants,
+//         {
+//           name: "",
+//           price: "",
+//         },
+//       ],
+//     }));
+//   };
+
+//   const removeVariant = (index) => {
+//     setForm((prev) => ({
+//       ...prev,
+//       variants: prev.variants.filter((_, i) => i !== index),
+//     }));
+//   };
+
+//   // ================= FORM DATA =================
+//   const prepareForm = () => {
+//     const data = new FormData();
+
+//     data.append("title", form.title);
+//     data.append("instructions", form.instructions);
+//     data.append("category", form.category);
+//     data.append("price", form.price);
+
+//     // IMPORTANT FIX
+//     data.append("ingredients", form.ingredients);
+
+//     if (
+//       form.variants.length &&
+//       form.variants.some((v) => v.name || v.price)
+//     ) {
+//       data.append("variants", JSON.stringify(form.variants));
+//     }
+
+//     if (form.image) {
+//       data.append("image", form.image);
+//     }
+
+//     return data;
+//   };
+
+//   // ================= CLOSE =================
+//   const close = () => {
+//     setShowForm(false);
+//     setEditingId(null);
+//     setForm(emptyForm);
+//   };
+
+//   // ================= CREATE =================
+//   const create = async () => {
+//     try {
+//       setSaving(true);
+
+//       await api.post("/api/v1/recipes", prepareForm(), {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           "Content-Type": "multipart/form-data",
+//         },
+//       });
+
+//       close();
+//     } catch (err) {
+//       console.log(err.response?.data || err.message);
+//       alert(err.response?.data?.message || "Error creating recipe");
+//     } finally {
+//       setSaving(false);
+//     }
+//   };
+
+//   // ================= UPDATE =================
+//   const update = async () => {
+//     try {
+//       setSaving(true);
+
+//       await api.put(
+//         `/api/v1/recipes/${editingId}`,
+//         prepareForm(),
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "multipart/form-data",
+//           },
+//         }
+//       );
+
+//       close();
+//     } catch (err) {
+//       console.log(err.response?.data || err.message);
+//       alert(err.response?.data?.message || "Error updating recipe");
+//     } finally {
+//       setSaving(false);
+//     }
+//   };
+
+//   // ================= DELETE =================
+//   const deleteItem = async (id) => {
+//     const confirmDelete = window.confirm(
+//       "Delete this recipe?"
+//     );
+
+//     if (!confirmDelete) return;
+
+//     setRecipes((prev) =>
+//       prev.filter((r) => r._id !== id)
+//     );
+
+//     try {
+//       await api.delete(`/api/v1/recipes/${id}`, {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+//     } catch (err) {
+//       fetchRecipes();
+//     }
+//   };
+
+//   // ================= EDIT =================
+//   const startEdit = (r) => {
+//     setForm({
+//       title: r.title || "",
+//       ingredients: (r.ingredients || []).join(", "),
+//       instructions: r.instructions || "",
+//       image: null,
+//       category: r.category || "",
+//       price: r.price || "",
+//       variants: r.variants?.length
+//         ? r.variants
+//         : [],
+//     });
+
+//     setEditingId(r._id);
+//     setShowForm(true);
+//   };
+
+//   return (
+//     <div style={styles.page}>
+//       {/* HEADER */}
+//       <div style={styles.header}>
+//         <h1 style={styles.title}>
+//           🍔 Admin Recipes
+//         </h1>
+
+//         <button
+//           style={styles.addBtn}
+//           onClick={() => setShowForm(true)}
+//         >
+//           + Add Recipe
+//         </button>
+//       </div>
+
+//       {/* MODAL */}
+//       {showForm && (
+//         <div
+//           style={styles.overlay}
+//           onClick={close}
+//         >
+//           <div
+//             style={styles.modal}
+//             onClick={(e) => e.stopPropagation()}
+//           >
+//             <h2 style={styles.modalTitle}>
+//               {editingId
+//                 ? "Edit Recipe"
+//                 : "Create Recipe"}
+//             </h2>
+
+//             <input
+//               name="title"
+//               value={form.title}
+//               onChange={handleChange}
+//               placeholder="Title"
+//               style={styles.input}
+//             />
+
+//             <input
+//               name="ingredients"
+//               value={form.ingredients}
+//               onChange={handleChange}
+//               placeholder="Ingredients"
+//               style={styles.input}
+//             />
+
+//             <textarea
+//               name="instructions"
+//               value={form.instructions}
+//               onChange={handleChange}
+//               placeholder="Instructions"
+//               style={styles.textarea}
+//             />
+
+//             <input
+//               type="text"
+//               name="price"
+//               value={form.price}
+//               onChange={handleChange}
+//               placeholder="Price"
+//               style={styles.input}
+//             />
+
+//             <select
+//               name="category"
+//               value={form.category}
+//               onChange={handleChange}
+//               style={styles.select}
+//             >
+//               <option value="">
+//                 Select category
+//               </option>
+
+//               {categories.map((c) => (
+//                 <option key={c} value={c}>
+//                   {c}
+//                 </option>
+//               ))}
+//             </select>
+
+//             <input
+//               type="file"
+//               name="image"
+//               onChange={handleChange}
+//               style={styles.file}
+//             />
+
+//             {/* VARIANTS */}
+//             <h3 style={styles.variantTitle}>
+//               Variants
+//             </h3>
+
+//             {form.variants.map((v, i) => (
+//               <div
+//                 key={i}
+//                 style={styles.variantRow}
+//               >
+//                 <input
+//                   placeholder="Variant Name"
+//                   value={v.name}
+//                   onChange={(e) =>
+//                     handleVariant(
+//                       i,
+//                       "name",
+//                       e.target.value
+//                     )
+//                   }
+//                   style={styles.input}
+//                 />
+
+//                 <input
+//                   placeholder="Price"
+//                   value={v.price}
+//                   onChange={(e) =>
+//                     handleVariant(
+//                       i,
+//                       "price",
+//                       e.target.value
+//                     )
+//                   }
+//                   style={styles.input}
+//                 />
+
+//                 <button
+//                   style={styles.removeBtn}
+//                   onClick={() =>
+//                     removeVariant(i)
+//                   }
+//                 >
+//                   ✖
+//                 </button>
+//               </div>
+//             ))}
+
+//             <button
+//               style={styles.addVariantBtn}
+//               onClick={addVariant}
+//             >
+//               + Add Variant
+//             </button>
+
+//             {/* ACTIONS */}
+//             <div style={styles.actions}>
+//               <button
+//                 style={styles.saveBtn}
+//                 onClick={
+//                   editingId
+//                     ? update
+//                     : create
+//                 }
+//               >
+//                 {saving
+//                   ? "Saving..."
+//                   : "Save"}
+//               </button>
+
+//               <button
+//                 style={styles.cancelBtn}
+//                 onClick={close}
+//               >
+//                 Cancel
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+
+//       {/* LOADING */}
+//       {loading ? (
+//         <h2 style={{ color: "#fff" }}>
+//           Loading...
+//         </h2>
+//       ) : (
+//         <div style={styles.grid}>
+//           {recipes.map((r) => (
+//             <div
+//               key={r._id}
+//               style={styles.card}
+//             >
+//               <img
+//                 src={getImageUrl(r)}
+//                 alt={r.title}
+//                 style={styles.image}
+//               />
+
+//               <div style={styles.cardBody}>
+//                 <h2>{r.title}</h2>
+
+//                 <div style={styles.category}>
+//                   {r.category}
+//                 </div>
+
+//                 <div style={styles.priceBox}>
+//                   {r.variants?.length ? (
+//                     r.variants.map(
+//                       (v, i) => (
+//                         <div
+//                           key={i}
+//                           style={
+//                             styles.variantLine
+//                           }
+//                         >
+//                           <span>
+//                             {v.name}
+//                           </span>
+
+//                           <span>
+//                             {v.price} EGP
+//                           </span>
+//                         </div>
+//                       )
+//                     )
+//                   ) : (
+//                     <div
+//                       style={
+//                         styles.variantLine
+//                       }
+//                     >
+//                       <span>Price</span>
+
+//                       <span>
+//                         {r.price} EGP
+//                       </span>
+//                     </div>
+//                   )}
+//                 </div>
+
+//                 <div style={styles.btnRow}>
+//                   <button
+//                     style={styles.editBtn}
+//                     onClick={() =>
+//                       startEdit(r)
+//                     }
+//                   >
+//                     Edit
+//                   </button>
+
+//                   <button
+//                     style={styles.deleteBtn}
+//                     onClick={() =>
+//                       deleteItem(r._id)
+//                     }
+//                   >
+//                     Delete
+//                   </button>
+//                 </div>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default AdminRecipes;
+
+// // ================= STYLES =================
+
+// const styles = {
+//   page: {
+//     minHeight: "100vh",
+//     background: "#0f172a",
+//     padding: "30px",
+//     color: "#fff",
+//     fontFamily: "sans-serif",
+//   },
+
+//   header: {
+//     display: "flex",
+//     justifyContent: "space-between",
+//     alignItems: "center",
+//     marginBottom: "30px",
+//   },
+
+//   title: {
+//     fontSize: "32px",
+//     fontWeight: "bold",
+//   },
+
+//   addBtn: {
+//     background: "#22c55e",
+//     color: "#fff",
+//     border: "none",
+//     padding: "12px 20px",
+//     borderRadius: "10px",
+//     cursor: "pointer",
+//     fontWeight: "bold",
+//   },
+
+//   grid: {
+//     display: "grid",
+//     gridTemplateColumns:
+//       "repeat(auto-fill,minmax(280px,1fr))",
+//     gap: "25px",
+//   },
+
+//   card: {
+//     background: "#1e293b",
+//     borderRadius: "18px",
+//     overflow: "hidden",
+//     boxShadow:
+//       "0 10px 30px rgba(0,0,0,.3)",
+//   },
+
+//   image: {
+//     width: "100%",
+//     height: "220px",
+//     objectFit: "cover",
+//   },
+
+//   cardBody: {
+//     padding: "18px",
+//   },
+
+//   category: {
+//     marginTop: "8px",
+//     color: "#94a3b8",
+//     textTransform: "capitalize",
+//   },
+
+//   priceBox: {
+//     marginTop: "15px",
+//     background: "#0f172a",
+//     padding: "12px",
+//     borderRadius: "10px",
+//   },
+
+//   variantLine: {
+//     display: "flex",
+//     justifyContent: "space-between",
+//     marginBottom: "8px",
+//   },
+
+//   btnRow: {
+//     display: "flex",
+//     gap: "10px",
+//     marginTop: "20px",
+//   },
+
+//   editBtn: {
+//     flex: 1,
+//     padding: "10px",
+//     border: "none",
+//     background: "#3b82f6",
+//     color: "#fff",
+//     borderRadius: "10px",
+//     cursor: "pointer",
+//   },
+
+//   deleteBtn: {
+//     flex: 1,
+//     padding: "10px",
+//     border: "none",
+//     background: "#ef4444",
+//     color: "#fff",
+//     borderRadius: "10px",
+//     cursor: "pointer",
+//   },
+
+//   overlay: {
+//     position: "fixed",
+//     inset: 0,
+//     background: "rgba(0,0,0,.7)",
+//     display: "flex",
+//     justifyContent: "center",
+//     alignItems: "center",
+//     zIndex: 999,
+//   },
+
+//   modal: {
+//     width: "500px",
+//     maxHeight: "90vh",
+//     overflowY: "auto",
+//     background: "#1e293b",
+//     borderRadius: "20px",
+//     padding: "25px",
+//   },
+
+//   modalTitle: {
+//     marginBottom: "20px",
+//   },
+
+//   input: {
+//     width: "100%",
+//     padding: "12px",
+//     marginBottom: "12px",
+//     borderRadius: "10px",
+//     border: "none",
+//     outline: "none",
+//     background: "#334155",
+//     color: "#fff",
+//   },
+
+//   textarea: {
+//     width: "100%",
+//     minHeight: "100px",
+//     padding: "12px",
+//     marginBottom: "12px",
+//     borderRadius: "10px",
+//     border: "none",
+//     outline: "none",
+//     resize: "none",
+//     background: "#334155",
+//     color: "#fff",
+//   },
+
+//   select: {
+//     width: "100%",
+//     padding: "12px",
+//     marginBottom: "12px",
+//     borderRadius: "10px",
+//     border: "none",
+//     outline: "none",
+//     background: "#334155",
+//     color: "#fff",
+//   },
+
+//   file: {
+//     marginBottom: "15px",
+//     color: "#fff",
+//   },
+
+//   variantTitle: {
+//     marginTop: "20px",
+//     marginBottom: "10px",
+//   },
+
+//   variantRow: {
+//     display: "flex",
+//     gap: "10px",
+//     alignItems: "center",
+//   },
+
+//   removeBtn: {
+//     background: "#ef4444",
+//     color: "#fff",
+//     border: "none",
+//     padding: "10px 14px",
+//     borderRadius: "10px",
+//     cursor: "pointer",
+//     height: "44px",
+//   },
+
+//   addVariantBtn: {
+//     width: "100%",
+//     marginTop: "10px",
+//     padding: "12px",
+//     border: "none",
+//     borderRadius: "10px",
+//     background: "#8b5cf6",
+//     color: "#fff",
+//     cursor: "pointer",
+//     fontWeight: "bold",
+//   },
+
+//   actions: {
+//     display: "flex",
+//     gap: "10px",
+//     marginTop: "25px",
+//   },
+
+//   saveBtn: {
+//     flex: 1,
+//     padding: "12px",
+//     border: "none",
+//     borderRadius: "10px",
+//     background: "#22c55e",
+//     color: "#fff",
+//     cursor: "pointer",
+//     fontWeight: "bold",
+//   },
+
+//   cancelBtn: {
+//     flex: 1,
+//     padding: "12px",
+//     border: "none",
+//     borderRadius: "10px",
+//     background: "#64748b",
+//     color: "#fff",
+//     cursor: "pointer",
+//     fontWeight: "bold",
+//   },
+// };
+
+
+
+
 import React, { useEffect, useState } from "react";
 import api from "../../api/api";
-import { baseUrlHandler } from "../../utils/baseUrlHandler";
 import socket from "../../socket/socket";
+import { baseUrlHandler } from "../../utils/baseUrlHandler";
 
 const emptyForm = {
   title: "",
   ingredients: "",
   instructions: "",
-  image: null,
   category: "",
   price: "",
+  image: null,
   variants: [],
+  restaurantId: "",
 };
-
-const categories = [
-  "beef",
-  "chicken",
-  "pizza",
-  "dessert",
-  "seafood",
-  "pasta",
-  "salad",
-  "soup",
-  "burger",
-  "drinks",
-  "crepes",
-];
 
 const AdminRecipes = () => {
   const [recipes, setRecipes] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
-
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -42,15 +808,11 @@ const AdminRecipes = () => {
   const getImageUrl = (r) => {
     const img = r.CoverImage;
 
-    if (!img) {
-      return "https://via.placeholder.com/300x200";
-    }
+    if (!img) return "https://via.placeholder.com/300x200";
 
-    if (img.startsWith("http")) {
-      return img;
-    }
+    if (img.startsWith("http")) return img;
 
-    return `${baseUrlHandler()}/${img.replace(/^\/+/g, "")}`;
+    return `${baseUrlHandler()}/${img.replace(/^\/+/, "")}`;
   };
 
   // ================= FETCH =================
@@ -66,7 +828,7 @@ const AdminRecipes = () => {
 
       setRecipes(res.data);
     } catch (err) {
-      console.log(err);
+      console.log(err?.response?.data || err.message);
     } finally {
       setLoading(false);
     }
@@ -76,23 +838,17 @@ const AdminRecipes = () => {
     fetchRecipes();
 
     socket.on("recipeCreated", (data) => {
-      setRecipes((prev) => {
-        const exists = prev.find((r) => r._id === data._id);
-
-        if (exists) return prev;
-
-        return [data, ...prev];
-      });
+      setRecipes((p) => [data, ...p]);
     });
 
     socket.on("recipeUpdated", (data) => {
-      setRecipes((prev) =>
-        prev.map((r) => (r._id === data._id ? data : r))
+      setRecipes((p) =>
+        p.map((r) => (r._id === data._id ? data : r))
       );
     });
 
     socket.on("recipeDeleted", (id) => {
-      setRecipes((prev) => prev.filter((r) => r._id !== id));
+      setRecipes((p) => p.filter((r) => r._id !== id));
     });
 
     return () => {
@@ -102,89 +858,45 @@ const AdminRecipes = () => {
     };
   }, []);
 
-  // ================= INPUT CHANGE =================
+  // ================= INPUT =================
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
     if (name === "image") {
-      setForm((prev) => ({
-        ...prev,
-        image: files[0],
-      }));
-
+      setForm((p) => ({ ...p, image: files[0] }));
       return;
     }
 
-    // PRICE ONLY NUMBERS
-    if (name === "price") {
-      const onlyNumbers = value.replace(/[^0-9]/g, "");
-
-      setForm((prev) => ({
-        ...prev,
-        price: onlyNumbers,
-      }));
-
-      return;
-    }
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setForm((p) => ({ ...p, [name]: value }));
   };
 
   // ================= VARIANTS =================
-  const handleVariant = (index, field, value) => {
-    const updated = [...form.variants];
-
-    if (field === "price") {
-      value = value.replace(/[^0-9]/g, "");
-    }
-
-    updated[index][field] = value;
-
-    setForm((prev) => ({
-      ...prev,
-      variants: updated,
-    }));
-  };
-
   const addVariant = () => {
-    setForm((prev) => ({
-      ...prev,
-      variants: [
-        ...prev.variants,
-        {
-          name: "",
-          price: "",
-        },
-      ],
+    setForm((p) => ({
+      ...p,
+      variants: [...p.variants, { name: "", price: "" }],
     }));
   };
 
-  const removeVariant = (index) => {
-    setForm((prev) => ({
-      ...prev,
-      variants: prev.variants.filter((_, i) => i !== index),
-    }));
+  const updateVariant = (i, field, value) => {
+    const copy = [...form.variants];
+    copy[i][field] = value;
+
+    setForm((p) => ({ ...p, variants: copy }));
   };
 
-  // ================= FORM DATA =================
-  const prepareForm = () => {
+  // ================= FORM =================
+  const prepareData = () => {
     const data = new FormData();
 
     data.append("title", form.title);
     data.append("instructions", form.instructions);
     data.append("category", form.category);
     data.append("price", form.price);
-
-    // IMPORTANT FIX
+    data.append("restaurantId", form.restaurantId);
     data.append("ingredients", form.ingredients);
 
-    if (
-      form.variants.length &&
-      form.variants.some((v) => v.name || v.price)
-    ) {
+    if (form.variants.length) {
       data.append("variants", JSON.stringify(form.variants));
     }
 
@@ -195,94 +907,49 @@ const AdminRecipes = () => {
     return data;
   };
 
-  // ================= CLOSE =================
-  const close = () => {
-    setShowForm(false);
-    setEditingId(null);
-    setForm(emptyForm);
-  };
-
   // ================= CREATE =================
-  const create = async () => {
-    try {
-      setSaving(true);
+  const createRecipe = async () => {
+    await api.post("/api/v1/recipes", prepareData(), {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-      await api.post("/api/v1/recipes", prepareForm(), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      close();
-    } catch (err) {
-      console.log(err.response?.data || err.message);
-      alert(err.response?.data?.message || "Error creating recipe");
-    } finally {
-      setSaving(false);
-    }
+    setShowForm(false);
+    setForm(emptyForm);
+    fetchRecipes();
   };
 
   // ================= UPDATE =================
-  const update = async () => {
-    try {
-      setSaving(true);
+  const updateRecipe = async () => {
+    await api.put(`/api/v1/recipes/${editingId}`, prepareData(), {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-      await api.put(
-        `/api/v1/recipes/${editingId}`,
-        prepareForm(),
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      close();
-    } catch (err) {
-      console.log(err.response?.data || err.message);
-      alert(err.response?.data?.message || "Error updating recipe");
-    } finally {
-      setSaving(false);
-    }
+    setShowForm(false);
+    setEditingId(null);
+    setForm(emptyForm);
+    fetchRecipes();
   };
 
   // ================= DELETE =================
-  const deleteItem = async (id) => {
-    const confirmDelete = window.confirm(
-      "Delete this recipe?"
-    );
+  const deleteRecipe = async (id) => {
+    await api.delete(`/api/v1/recipes/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-    if (!confirmDelete) return;
-
-    setRecipes((prev) =>
-      prev.filter((r) => r._id !== id)
-    );
-
-    try {
-      await api.delete(`/api/v1/recipes/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    } catch (err) {
-      fetchRecipes();
-    }
+    setRecipes((p) => p.filter((r) => r._id !== id));
   };
 
   // ================= EDIT =================
   const startEdit = (r) => {
     setForm({
-      title: r.title || "",
-      ingredients: (r.ingredients || []).join(", "),
-      instructions: r.instructions || "",
-      image: null,
-      category: r.category || "",
+      title: r.title,
+      ingredients: r.ingredients?.join(", ") || "",
+      instructions: r.instructions,
+      category: r.category,
       price: r.price || "",
-      variants: r.variants?.length
-        ? r.variants
-        : [],
+      image: null,
+      restaurantId: r.restaurantId?._id || r.restaurantId,
+      variants: r.variants || [],
     });
 
     setEditingId(r._id);
@@ -291,35 +958,63 @@ const AdminRecipes = () => {
 
   return (
     <div style={styles.page}>
-      {/* HEADER */}
       <div style={styles.header}>
-        <h1 style={styles.title}>
-          🍔 Admin Recipes
-        </h1>
+        <h2 style={styles.title}>🍔 Admin Recipes</h2>
 
-        <button
-          style={styles.addBtn}
-          onClick={() => setShowForm(true)}
-        >
+        <button style={styles.addBtn} onClick={() => setShowForm(true)}>
           + Add Recipe
         </button>
       </div>
 
+      {/* TABLE */}
+      <table style={styles.table}>
+        <thead>
+          <tr>
+            <th style={styles.th}>Image</th>
+            <th style={styles.th}>Title</th>
+            <th style={styles.th}>Category</th>
+            <th style={styles.th}>Restaurant</th>
+            <th style={styles.th}>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {recipes.map((r) => (
+            <tr key={r._id}>
+              <td style={styles.td}>
+                <img
+                  src={getImageUrl(r)}
+                  alt={r.title}
+                  style={styles.img}
+                />
+              </td>
+
+              <td style={styles.td}>{r.title}</td>
+              <td style={styles.td}>{r.category}</td>
+              <td style={styles.td}>{r.restaurantId?.name}</td>
+
+              <td style={styles.td}>
+                <button style={styles.editBtn} onClick={() => startEdit(r)}>
+                  Edit
+                </button>
+
+                <button
+                  style={styles.deleteBtn}
+                  onClick={() => deleteRecipe(r._id)}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
       {/* MODAL */}
       {showForm && (
-        <div
-          style={styles.overlay}
-          onClick={close}
-        >
-          <div
-            style={styles.modal}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 style={styles.modalTitle}>
-              {editingId
-                ? "Edit Recipe"
-                : "Create Recipe"}
-            </h2>
+        <div style={styles.overlay}>
+          <div style={styles.modal}>
+            <h3>{editingId ? "Edit Recipe" : "Add Recipe"}</h3>
 
             <input
               name="title"
@@ -337,16 +1032,23 @@ const AdminRecipes = () => {
               style={styles.input}
             />
 
-            <textarea
+            <input
               name="instructions"
               value={form.instructions}
               onChange={handleChange}
               placeholder="Instructions"
-              style={styles.textarea}
+              style={styles.input}
             />
 
             <input
-              type="text"
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+              placeholder="Category"
+              style={styles.input}
+            />
+
+            <input
               name="price"
               value={form.price}
               onChange={handleChange}
@@ -354,192 +1056,63 @@ const AdminRecipes = () => {
               style={styles.input}
             />
 
-            <select
-              name="category"
-              value={form.category}
-              onChange={handleChange}
-              style={styles.select}
-            >
-              <option value="">
-                Select category
-              </option>
-
-              {categories.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-
             <input
-              type="file"
-              name="image"
+              name="restaurantId"
+              value={form.restaurantId}
               onChange={handleChange}
-              style={styles.file}
+              placeholder="Restaurant ID"
+              style={styles.input}
             />
 
-            {/* VARIANTS */}
-            <h3 style={styles.variantTitle}>
-              Variants
-            </h3>
+            <input type="file" name="image" onChange={handleChange} />
+
+            <hr />
+
+            <h4>Variants</h4>
 
             {form.variants.map((v, i) => (
-              <div
-                key={i}
-                style={styles.variantRow}
-              >
+              <div key={i} style={styles.variantRow}>
                 <input
-                  placeholder="Variant Name"
+                  placeholder="Name"
                   value={v.name}
                   onChange={(e) =>
-                    handleVariant(
-                      i,
-                      "name",
-                      e.target.value
-                    )
+                    updateVariant(i, "name", e.target.value)
                   }
-                  style={styles.input}
+                  style={styles.smallInput}
                 />
 
                 <input
                   placeholder="Price"
                   value={v.price}
                   onChange={(e) =>
-                    handleVariant(
-                      i,
-                      "price",
-                      e.target.value
-                    )
+                    updateVariant(i, "price", e.target.value)
                   }
-                  style={styles.input}
+                  style={styles.smallInput}
                 />
-
-                <button
-                  style={styles.removeBtn}
-                  onClick={() =>
-                    removeVariant(i)
-                  }
-                >
-                  ✖
-                </button>
               </div>
             ))}
 
-            <button
-              style={styles.addVariantBtn}
-              onClick={addVariant}
-            >
+            <button style={styles.addVariantBtn} onClick={addVariant}>
               + Add Variant
             </button>
 
-            {/* ACTIONS */}
-            <div style={styles.actions}>
-              <button
-                style={styles.saveBtn}
-                onClick={
-                  editingId
-                    ? update
-                    : create
-                }
-              >
-                {saving
-                  ? "Saving..."
-                  : "Save"}
-              </button>
-
-              <button
-                style={styles.cancelBtn}
-                onClick={close}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* LOADING */}
-      {loading ? (
-        <h2 style={{ color: "#fff" }}>
-          Loading...
-        </h2>
-      ) : (
-        <div style={styles.grid}>
-          {recipes.map((r) => (
-            <div
-              key={r._id}
-              style={styles.card}
+            <button
+              style={styles.saveBtn}
+              onClick={editingId ? updateRecipe : createRecipe}
             >
-              <img
-                src={getImageUrl(r)}
-                alt={r.title}
-                style={styles.image}
-              />
+              Save
+            </button>
 
-              <div style={styles.cardBody}>
-                <h2>{r.title}</h2>
-
-                <div style={styles.category}>
-                  {r.category}
-                </div>
-
-                <div style={styles.priceBox}>
-                  {r.variants?.length ? (
-                    r.variants.map(
-                      (v, i) => (
-                        <div
-                          key={i}
-                          style={
-                            styles.variantLine
-                          }
-                        >
-                          <span>
-                            {v.name}
-                          </span>
-
-                          <span>
-                            {v.price} EGP
-                          </span>
-                        </div>
-                      )
-                    )
-                  ) : (
-                    <div
-                      style={
-                        styles.variantLine
-                      }
-                    >
-                      <span>Price</span>
-
-                      <span>
-                        {r.price} EGP
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <div style={styles.btnRow}>
-                  <button
-                    style={styles.editBtn}
-                    onClick={() =>
-                      startEdit(r)
-                    }
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    style={styles.deleteBtn}
-                    onClick={() =>
-                      deleteItem(r._id)
-                    }
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+            <button
+              style={styles.cancelBtn}
+              onClick={() => {
+                setShowForm(false);
+                setEditingId(null);
+              }}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -548,14 +1121,12 @@ const AdminRecipes = () => {
 
 export default AdminRecipes;
 
-// ================= STYLES =================
-
 const styles = {
   page: {
     minHeight: "100vh",
     background: "#0f172a",
-    padding: "30px",
     color: "#fff",
+    padding: "25px",
     fontFamily: "sans-serif",
   },
 
@@ -563,215 +1134,133 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "30px",
+    marginBottom: "20px",
   },
 
   title: {
-    fontSize: "32px",
+    fontSize: "28px",
     fontWeight: "bold",
   },
 
   addBtn: {
     background: "#22c55e",
-    color: "#fff",
     border: "none",
-    padding: "12px 20px",
+    padding: "10px 18px",
     borderRadius: "10px",
+    color: "#fff",
     cursor: "pointer",
     fontWeight: "bold",
   },
 
-  grid: {
-    display: "grid",
-    gridTemplateColumns:
-      "repeat(auto-fill,minmax(280px,1fr))",
-    gap: "25px",
-  },
-
-  card: {
-    background: "#1e293b",
-    borderRadius: "18px",
-    overflow: "hidden",
-    boxShadow:
-      "0 10px 30px rgba(0,0,0,.3)",
-  },
-
-  image: {
+  table: {
     width: "100%",
-    height: "220px",
-    objectFit: "cover",
+    borderCollapse: "collapse",
+    background: "#1e293b",
   },
 
-  cardBody: {
-    padding: "18px",
-  },
-
-  category: {
-    marginTop: "8px",
-    color: "#94a3b8",
-    textTransform: "capitalize",
-  },
-
-  priceBox: {
-    marginTop: "15px",
-    background: "#0f172a",
+  th: {
     padding: "12px",
-    borderRadius: "10px",
+    background: "#111827",
+    textAlign: "left",
   },
 
-  variantLine: {
-    display: "flex",
-    justifyContent: "space-between",
-    marginBottom: "8px",
+  td: {
+    padding: "12px",
+    borderBottom: "1px solid #334155",
   },
 
-  btnRow: {
-    display: "flex",
-    gap: "10px",
-    marginTop: "20px",
+  img: {
+    width: "60px",
+    height: "60px",
+    objectFit: "cover",
+    borderRadius: "8px",
   },
 
   editBtn: {
-    flex: 1,
-    padding: "10px",
-    border: "none",
     background: "#3b82f6",
+    border: "none",
+    padding: "6px 10px",
+    borderRadius: "8px",
     color: "#fff",
-    borderRadius: "10px",
-    cursor: "pointer",
+    marginRight: "6px",
   },
 
   deleteBtn: {
-    flex: 1,
-    padding: "10px",
-    border: "none",
     background: "#ef4444",
+    border: "none",
+    padding: "6px 10px",
+    borderRadius: "8px",
     color: "#fff",
-    borderRadius: "10px",
-    cursor: "pointer",
   },
 
   overlay: {
     position: "fixed",
     inset: 0,
-    background: "rgba(0,0,0,.7)",
+    background: "rgba(0,0,0,0.6)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 999,
   },
 
   modal: {
     width: "500px",
-    maxHeight: "90vh",
-    overflowY: "auto",
     background: "#1e293b",
-    borderRadius: "20px",
-    padding: "25px",
-  },
-
-  modalTitle: {
-    marginBottom: "20px",
+    padding: "20px",
+    borderRadius: "16px",
   },
 
   input: {
     width: "100%",
-    padding: "12px",
-    marginBottom: "12px",
-    borderRadius: "10px",
-    border: "none",
-    outline: "none",
-    background: "#334155",
-    color: "#fff",
-  },
-
-  textarea: {
-    width: "100%",
-    minHeight: "100px",
-    padding: "12px",
-    marginBottom: "12px",
-    borderRadius: "10px",
-    border: "none",
-    outline: "none",
-    resize: "none",
-    background: "#334155",
-    color: "#fff",
-  },
-
-  select: {
-    width: "100%",
-    padding: "12px",
-    marginBottom: "12px",
-    borderRadius: "10px",
-    border: "none",
-    outline: "none",
-    background: "#334155",
-    color: "#fff",
-  },
-
-  file: {
-    marginBottom: "15px",
-    color: "#fff",
-  },
-
-  variantTitle: {
-    marginTop: "20px",
+    padding: "10px",
     marginBottom: "10px",
+    borderRadius: "8px",
+    background: "#334155",
+    color: "#fff",
+    border: "none",
+  },
+
+  smallInput: {
+    flex: 1,
+    padding: "8px",
+    background: "#334155",
+    color: "#fff",
+    borderRadius: "8px",
+    border: "none",
   },
 
   variantRow: {
     display: "flex",
     gap: "10px",
-    alignItems: "center",
-  },
-
-  removeBtn: {
-    background: "#ef4444",
-    color: "#fff",
-    border: "none",
-    padding: "10px 14px",
-    borderRadius: "10px",
-    cursor: "pointer",
-    height: "44px",
+    marginBottom: "8px",
   },
 
   addVariantBtn: {
-    width: "100%",
-    marginTop: "10px",
-    padding: "12px",
-    border: "none",
-    borderRadius: "10px",
     background: "#8b5cf6",
+    border: "none",
+    padding: "8px",
     color: "#fff",
-    cursor: "pointer",
-    fontWeight: "bold",
-  },
-
-  actions: {
-    display: "flex",
-    gap: "10px",
-    marginTop: "25px",
+    borderRadius: "8px",
+    marginTop: "5px",
   },
 
   saveBtn: {
-    flex: 1,
-    padding: "12px",
-    border: "none",
-    borderRadius: "10px",
+    width: "100%",
+    marginTop: "10px",
+    padding: "10px",
     background: "#22c55e",
+    border: "none",
     color: "#fff",
-    cursor: "pointer",
-    fontWeight: "bold",
+    borderRadius: "10px",
   },
 
   cancelBtn: {
-    flex: 1,
-    padding: "12px",
-    border: "none",
-    borderRadius: "10px",
+    width: "100%",
+    marginTop: "8px",
+    padding: "10px",
     background: "#64748b",
+    border: "none",
     color: "#fff",
-    cursor: "pointer",
-    fontWeight: "bold",
+    borderRadius: "10px",
   },
 };
+

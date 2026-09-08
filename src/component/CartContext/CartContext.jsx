@@ -1,164 +1,350 @@
-// import React, { createContext, useContext, useEffect, useState } from "react";
-
-// const CartContext = createContext();
-
-// export const CartProvider = ({ children }) => {
-//   const [cart, setCart] = useState(() => {
-//     const stored = localStorage.getItem("cart");
-//     return stored ? JSON.parse(stored) : [];
-//   });
-
-//   useEffect(() => {
-//     localStorage.setItem("cart", JSON.stringify(cart));
-//   }, [cart]);
-
-//   // ✅ ADD TO CART (NO DUPLICATES + NO INCREMENT)
-//   const addToCart = (item) => {
-//     setCart((prev) => {
-//       const exists = prev.find((p) => p._id === item._id);
-
-//       // لو موجود → مفيش أي تغيير
-//       if (exists) return prev;
-
-//       // لو جديد → ضيفه بكمية 1
-//       return [...prev, { ...item, quantity: 1 }];
-//     });
-//   };
-
-//   const removeFromCart = (id) => {
-//     setCart((prev) => prev.filter((item) => item._id !== id));
-//   };
-
-//   const increaseQty = (id) => {
-//     setCart((prev) =>
-//       prev.map((item) =>
-//         item._id === id
-//           ? { ...item, quantity: item.quantity + 1 }
-//           : item
-//       )
-//     );
-//   };
-
-//   const decreaseQty = (id) => {
-//     setCart((prev) =>
-//       prev
-//         .map((item) =>
-//           item._id === id
-//             ? { ...item, quantity: item.quantity - 1 }
-//             : item
-//         )
-//         .filter((item) => item.quantity > 0)
-//     );
-//   };
-
-//   const clearCart = () => setCart([]);
-
-//   return (
-//     <CartContext.Provider
-//       value={{
-//         cart,
-//         setCart,
-//         addToCart,
-//         removeFromCart,
-//         increaseQty,
-//         decreaseQty,
-//         clearCart,
-//       }}
-//     >
-//       {children}
-//     </CartContext.Provider>
-//   );
-// };
-
-// export const useCart = () => useContext(CartContext);
-
-
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+  // =====================================================
+  // LOAD CART FROM LOCAL STORAGE
+  // =====================================================
+
   const [cart, setCart] = useState(() => {
     const stored = localStorage.getItem("cart");
-    return stored ? JSON.parse(stored) : [];
+
+    try {
+      return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+      console.error("CART LOAD ERROR:", error);
+      return [];
+    }
   });
+
+  // =====================================================
+  // SAVE CART TO LOCAL STORAGE
+  // =====================================================
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  // 🔥 Unique key للمنتج + variant
-  const getKey = (id, variant) => {
-    return `${id}-${variant?.name || "default"}`;
+  // =====================================================
+  // GET VARIANT
+  // =====================================================
+
+  const getVariant = (item) => {
+    return item.selectedVariant || item.variant || null;
   };
 
-  // ================= ADD =================
+  // =====================================================
+  // GET VARIANT NAME
+  // =====================================================
+
+  const getVariantName = (variant) => {
+    if (!variant) {
+      return "default";
+    }
+
+    if (typeof variant === "string") {
+      return variant;
+    }
+
+    return (
+      variant.name ||
+      variant.size ||
+      "default"
+    );
+  };
+
+  // =====================================================
+  // GET UNIQUE KEY
+  // =====================================================
+
+  const getKey = (item) => {
+    /*
+      لو Offer
+      نستخدم offerId
+
+      لو Recipe
+      نستخدم _id
+    */
+
+    const itemId = item.isOffer
+      ? item.offerId || item._id
+      : item._id;
+
+    const variant = getVariant(item);
+
+    const variantName =
+      getVariantName(variant);
+
+    const type = item.isOffer
+      ? "offer"
+      : "product";
+
+    return `${type}-${itemId}-${variantName}`;
+  };
+
+  // =====================================================
+  // ADD TO CART
+  // =====================================================
+
   const addToCart = (item) => {
-    const key = getKey(item._id, item.selectedVariant);
-
     setCart((prev) => {
-      const existing = prev.find((p) => p.key === key);
 
-      if (existing) {
-        return prev.map((p) =>
-          p.key === key
-            ? { ...p, quantity: p.quantity + 1 }
-            : p
+      // =================================================
+      // VALIDATION
+      // =================================================
+
+      if (!item?._id && !item?.offerId) {
+        console.error(
+          "ADD TO CART ERROR: Item ID is missing",
+          item
+        );
+
+        return prev;
+      }
+
+      // =================================================
+      // RESTAURANT CHECK
+      // =================================================
+
+      if (
+        prev.length > 0 &&
+        prev[0].restaurantId &&
+        item.restaurantId &&
+        prev[0].restaurantId.toString() !==
+          item.restaurantId.toString()
+      ) {
+        alert(
+          "You can only order from one restaurant at a time 🚫"
+        );
+
+        return prev;
+      }
+
+      // =================================================
+      // UNIQUE KEY
+      // =================================================
+
+      const key = getKey(item);
+
+      // =================================================
+      // CHECK EXISTING ITEM
+      // =================================================
+
+      const existingItem = prev.find(
+        (cartItem) =>
+          cartItem.key === key
+      );
+
+      // =================================================
+      // INCREASE EXISTING
+      // =================================================
+
+      if (existingItem) {
+        return prev.map((cartItem) =>
+          cartItem.key === key
+            ? {
+                ...cartItem,
+
+                quantity:
+                  Number(cartItem.quantity || 0) +
+                  1,
+              }
+            : cartItem
         );
       }
 
+      // =================================================
+      // ADD NEW ITEM
+      // =================================================
+
+      const newItem = {
+        ...item,
+
+        key,
+
+        quantity: 1,
+
+        price: Number(item.price || 0),
+
+        restaurantId:
+          item.restaurantId || null,
+
+        selectedVariant:
+          getVariant(item),
+
+        // =================================================
+        // OFFER DATA
+        // =================================================
+
+        isOffer:
+          Boolean(item.isOffer),
+
+        offerId:
+          item.offerId || null,
+
+        discount:
+          Number(item.discount || 0),
+
+        // =================================================
+        // OTHER DATA
+        // =================================================
+
+        image:
+          item.image || "",
+
+        restaurantName:
+          item.restaurantName || "",
+      };
+
       return [
         ...prev,
-        {
-          ...item,
-          key,
-          quantity: 1,
-          price: Number(item.price), // 🔥 تأكيد رقم
-        },
+        newItem,
       ];
     });
   };
 
-  // ================= REMOVE =================
+  // =====================================================
+  // REMOVE FROM CART
+  // =====================================================
+
   const removeFromCart = (key) => {
-    setCart((prev) => prev.filter((item) => item.key !== key));
+    setCart((prev) =>
+      prev.filter(
+        (item) => item.key !== key
+      )
+    );
   };
 
-  // ================= INCREASE =================
+  // =====================================================
+  // INCREASE QUANTITY
+  // =====================================================
+
   const increaseQty = (key) => {
     setCart((prev) =>
       prev.map((item) =>
         item.key === key
-          ? { ...item, quantity: item.quantity + 1 }
+          ? {
+              ...item,
+
+              quantity:
+                Number(item.quantity || 0) +
+                1,
+            }
           : item
       )
     );
   };
 
-  // ================= DECREASE =================
+  // =====================================================
+  // DECREASE QUANTITY
+  // =====================================================
+
   const decreaseQty = (key) => {
     setCart((prev) =>
       prev
         .map((item) =>
           item.key === key
-            ? { ...item, quantity: item.quantity - 1 }
+            ? {
+                ...item,
+
+                quantity:
+                  Number(item.quantity || 0) -
+                  1,
+              }
             : item
         )
-        .filter((item) => item.quantity > 0)
+        .filter(
+          (item) =>
+            Number(item.quantity) > 0
+        )
     );
   };
 
-  const clearCart = () => setCart([]);
+  // =====================================================
+  // CLEAR CART
+  // =====================================================
+
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("cart");
+  };
+
+  // =====================================================
+  // GET TOTAL ITEMS
+  // =====================================================
+
+  const getTotalItems = () => {
+    return cart.reduce(
+      (total, item) =>
+        total +
+        Number(item.quantity || 0),
+      0
+    );
+  };
+
+  // =====================================================
+  // GET TOTAL PRICE
+  // =====================================================
+
+  const getTotalPrice = () => {
+    return cart.reduce(
+      (total, item) =>
+        total +
+        Number(item.price || 0) *
+          Number(item.quantity || 0),
+      0
+    );
+  };
+
+  // =====================================================
+  // CHECK IF ITEM EXISTS
+  // =====================================================
+
+  const isInCart = (item) => {
+    if (!item) {
+      return false;
+    }
+
+    const key = getKey(item);
+
+    return cart.some(
+      (cartItem) =>
+        cartItem.key === key
+    );
+  };
+
+  // =====================================================
+  // CONTEXT
+  // =====================================================
 
   return (
     <CartContext.Provider
       value={{
+        // Cart
         cart,
+        setCart,
+
+        // Add / Remove
         addToCart,
         removeFromCart,
+
+        // Quantity
         increaseQty,
         decreaseQty,
+
+        // Clear
         clearCart,
+
+        // Helpers
+        getTotalItems,
+        getTotalPrice,
+        isInCart,
       }}
     >
       {children}
@@ -166,4 +352,18 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-export const useCart = () => useContext(CartContext);
+// =======================================================
+// USE CART HOOK
+// =======================================================
+
+export const useCart = () => {
+  const context = useContext(CartContext);
+
+  if (!context) {
+    throw new Error(
+      "useCart must be used inside CartProvider"
+    );
+  }
+
+  return context;
+};

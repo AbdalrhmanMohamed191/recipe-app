@@ -1,0 +1,335 @@
+.restaurant-profile-page {
+  min-height: 100vh;
+  padding: 10px;
+  color: white;
+}
+
+/* HEADER */
+
+.profile-page-header {
+  margin-bottom: 30px;
+}
+
+.profile-page-header h1 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.profile-page-header p {
+  margin-top: 7px;
+  color: #888;
+}
+
+/* CONTAINER */
+
+.profile-container {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 25px;
+  align-items: start;
+}
+
+/* PREVIEW */
+
+.profile-preview {
+  background: #151515;
+  border: 1px solid #292929;
+  border-radius: 16px;
+  padding: 25px;
+  text-align: center;
+}
+
+.preview-image {
+  width: 180px;
+  height: 180px;
+  margin: auto;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #222;
+  border: 4px solid #ffcc00;
+}
+
+.preview-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 65px;
+}
+
+.profile-preview h2 {
+  margin: 18px 0 5px;
+  font-size: 21px;
+}
+
+.profile-preview > p {
+  color: #888;
+  margin: 0;
+}
+
+/* STATUS */
+
+.restaurant-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 15px;
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: #17351f;
+  color: #4ade80;
+  font-size: 12px;
+}
+
+.restaurant-status span {
+  width: 7px;
+  height: 7px;
+  background: #4ade80;
+  border-radius: 50%;
+}
+
+/* FORM */
+
+.profile-form {
+  background: #151515;
+  border: 1px solid #292929;
+  border-radius: 16px;
+  padding: 25px;
+}
+
+.section-title {
+  margin-bottom: 25px;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.section-title span {
+  display: block;
+  color: #777;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* FIELD */
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.profile-field label {
+  color: #ccc;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.profile-field input,
+.profile-field textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 9px;
+  border: 1px solid #333;
+  outline: none;
+  background: #202020;
+  color: white;
+  font-size: 14px;
+}
+
+.profile-field textarea {
+  resize: vertical;
+}
+
+.profile-field input:focus,
+.profile-field textarea:focus {
+  border-color: #ffcc00;
+}
+
+.profile-field small {
+  color: #666;
+  font-size: 11px;
+}
+
+/* SAVE */
+
+.save-profile-btn {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  background: #ffcc00;
+  color: #111;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.save-profile-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 204, 0, 0.2);
+}
+
+.save-profile-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* OWNER INFO */
+
+.owner-info-card {
+  margin-top: 25px;
+  background: #151515;
+  border: 1px solid #292929;
+  border-radius: 16px;
+  padding: 22px;
+}
+
+.owner-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.owner-info-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.owner-info-header span {
+  background: #292300;
+  color: #ffcc00;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+}
+
+.owner-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.owner-info-grid div {
+  padding: 15px;
+  background: #202020;
+  border-radius: 10px;
+}
+
+.owner-info-grid small {
+  display: block;
+  color: #777;
+  margin-bottom: 6px;
+}
+
+.owner-info-grid strong {
+  font-size: 14px;
+  word-break: break-word;
+}
+
+/* LOADING */
+
+.profile-loading {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+}
+
+.profile-spinner {
+  width: 38px;
+  height: 38px;
+  border: 3px solid #333;
+  border-top-color: #ffcc00;
+  border-radius: 50%;
+  animation: profileSpin 0.8s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes profileSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* EMPTY */
+
+.profile-empty {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #888;
+}
+
+.profile-empty > div {
+  font-size: 60px;
+  margin-bottom: 10px;
+}
+
+.profile-empty h2 {
+  color: white;
+}
+
+/* BUTTON SPINNER */
+
+.button-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #555;
+  border-top-color: #111;
+  border-radius: 50%;
+  animation: profileSpin 0.7s linear infinite;
+  margin-right: 7px;
+  vertical-align: middle;
+}
+
+/* MOBILE */
+
+@media (max-width: 850px) {
+  .profile-container {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-preview {
+    max-width: 500px;
+    width: 100%;
+    margin: auto;
+  }
+
+  .owner-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .restaurant-profile-page {
+    padding: 0;
+  }
+
+  .profile-page-header h1 {
+    font-size: 24px;
+  }
+
+  .profile-form,
+  .profile-preview,
+  .owner-info-card {
+    padding: 18px;
+  }
+}

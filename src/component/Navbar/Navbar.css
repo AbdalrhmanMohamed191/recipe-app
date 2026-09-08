@@ -1,164 +1,716 @@
-header {
+/* =====================================================
+   HEADER
+===================================================== */
+
+.site-header {
   position: fixed;
   top: 0;
   left: 0;
+
   width: 100%;
+
   z-index: 1000;
 }
 
-/* NAVBAR */
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
 .navbar {
+  width: 100%;
+  height: 76px;
+
   display: flex;
+  align-items: center;
   justify-content: space-between;
+
+  padding: 0 7%;
+
+  background: rgba(12, 12, 12, 0.78);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  border-bottom: 1px solid
+    rgba(255, 255, 255, 0.08);
+
+  box-sizing: border-box;
+}
+
+
+/* =====================================================
+   FAMY LOGO
+===================================================== */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  width: auto;
+  height: 76px;
+
+  text-decoration: none;
+
+  flex-shrink: 0;
+
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+
+/* =====================================================
+   LOGO IMAGE
+===================================================== */
+
+.logo-img {
+  display: block;
+
+  width: 54px;
+  height: 54px;
+
+  object-fit: contain;
+  object-position: center;
+
+  flex-shrink: 0;
+
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+
+/* =====================================================
+   LOGO TEXT
+===================================================== */
+
+.logo-text {
+  display: flex;
   align-items: center;
 
-  padding: 14px 8%;
-  height: 75px;
+  font-size: 29px;
+  font-weight: 900;
 
-  background: rgba(20, 20, 20, 0.55);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  letter-spacing: -1.8px;
+  line-height: 1;
 }
 
-/* LOGO */
-.logo img {
-  width: 60px;
-  transition: 0.3s;
+
+/* FA */
+
+.logo-main {
+  color: #ffffff;
 }
 
-.logo img:hover {
-  transform: scale(1.1);
+
+/* MY */
+
+.logo-name {
+  background:
+    linear-gradient(
+      135deg,
+      #ff3d77,
+      #ff9a3d
+    );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  background-clip: text;
 }
 
-/* LINKS */
+
+/* =====================================================
+   LOGO HOVER
+===================================================== */
+
+.logo:hover {
+  transform: translateY(-2px);
+}
+
+
+.logo:hover .logo-img {
+  transform: scale(1.06);
+
+  filter:
+    drop-shadow(
+      0 0 10px
+      rgba(255, 61, 119, 0.35)
+    );
+}
+
+
+.logo:hover .logo-text {
+  filter:
+    drop-shadow(
+      0 0 8px
+      rgba(255, 61, 119, 0.18)
+    );
+}
+
+
+/* =====================================================
+   NAV LINKS
+===================================================== */
+
 .nav-links {
   display: flex;
+  align-items: center;
+
+  gap: 30px;
+
   list-style: none;
-  gap: 25px;
+
+  margin: 0;
+  padding: 0;
+}
+
+
+.nav-links li {
+  display: flex;
   align-items: center;
 }
 
+
+/* =====================================================
+   NORMAL LINKS
+===================================================== */
+
 .nav-links a {
-  text-decoration: none;
-  color: #f5f5f5;
-  font-size: 16px;
-  font-weight: 500;
   position: relative;
+
+  text-decoration: none;
+
+  color: #eeeeee;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
 }
+
+
+.nav-links a:hover {
+  color: #ffffff;
+}
+
+
+/* =====================================================
+   LINK UNDERLINE
+===================================================== */
 
 .nav-links a::after {
   content: "";
+
   position: absolute;
-  left: 0;
-  bottom: -5px;
-  width: 0%;
+
+  left: 50%;
+  bottom: -7px;
+
+  width: 0;
   height: 2px;
-  background: linear-gradient(135deg, #ff3d77, #ff9a3d);
-  transition: 0.3s;
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff3d77,
+      #ff9a3d
+    );
+
+  transform: translateX(-50%);
+
+  transition:
+    width 0.3s ease;
 }
+
 
 .nav-links a:hover::after {
   width: 100%;
 }
 
-/* CART */
+
+/* =====================================================
+   CART
+===================================================== */
+
 .cart-icon {
   position: relative;
-  font-size: 20px;
-  color: white;
 }
+
+
+.cart-icon a {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ffffff;
+
+  border-radius: 10px;
+
+  transition:
+    0.3s ease;
+}
+
+
+/* Remove underline */
+
+.cart-icon a::after {
+  display: none;
+}
+
+
+.cart-icon a:hover {
+  color: #ff5b83;
+
+  /* background:
+    rgba(255, 255, 255, 0.06); */
+
+  transform: translateY(-2px);
+}
+
+
+.cart-icon svg {
+  font-size: 18px;
+}
+
+
+/* =====================================================
+   CART BADGE
+===================================================== */
 
 .cart-badge {
   position: absolute;
-  top: -8px;
-  right: -10px;
-  background: #ff3d77;
-  color: white;
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 50%;
-}
 
-/* BUTTON */
-.auth-btn {
-  background: linear-gradient(135deg, #ff3d77, #ff9a3d);
-  color: white;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.3s;
-}
+  top: -3px;
+  right: -3px;
 
-.auth-btn:hover {
-  transform: translateY(-3px);
-}
+  min-width: 10px;
+  height: 17px;
 
-/* HAMBURGER */
-.menu-icon {
-  display: none;
-  font-size: 30px;
-  color: white;
-  cursor: pointer;
-}
-
-/* MOBILE */
-@media (max-width: 768px) {
-  .menu-icon {
-    display: block;
-  }
-
-  .nav-links {
-    position: absolute;
-    top: 75px;
-    left: 0;
-    width: 100%;
-    height: calc(100vh - 75px);
-
-    flex-direction: column;
-    justify-content: center;
-    gap: 25px;
-
-    background: rgba(10, 10, 10, 0.95);
-    backdrop-filter: blur(15px);
-
-    transform: translateY(-120%);
-    opacity: 0;
-    pointer-events: none;
-
-    transition: 0.4s ease;
-  }
-
-  .nav-links.active {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-.logo {
   display: flex;
   align-items: center;
-}
+  justify-content: center;
 
-.logo img {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
+  padding: 0 4px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff3d77,
+      #ff9a3d
+    );
+
+  color: #ffffff;
+
+  font-size: 10px;
+  font-weight: 700;
 
   border-radius: 50%;
-  padding: 6px;
 
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
+  /* border: 2px solid #111; */
 
-  transition: 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  box-sizing: content-box;
 }
 
-.logo img:hover {
-  transform: scale(1.08) rotate(-2deg);
-  box-shadow: 0 6px 20px rgba(255, 61, 119, 0.25);
+
+/* =====================================================
+   AUTH BUTTON
+===================================================== */
+
+.auth-btn {
+  border: none;
+
+  padding: 9px 20px;
+
+  border-radius: 10px;
+
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff3d77,
+      #ff9a3d
+    );
+
+  box-shadow:
+    0 5px 20px
+    rgba(255, 61, 119, 0.18);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+.auth-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 25px
+    rgba(255, 61, 119, 0.3);
+}
+
+
+.auth-btn:active {
+  transform: scale(0.96);
+}
+
+
+/* =====================================================
+   ADMIN
+===================================================== */
+
+.panel-link {
+  color: #ffffff !important;
+}
+
+
+/* =====================================================
+   RESTAURANT PANEL
+===================================================== */
+
+.restaurant-panel-btn {
+  display: flex !important;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 8px 13px;
+
+  border-radius: 9px;
+
+  background:
+    rgba(255, 255, 255, 0.06);
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.1);
+
+  transition:
+    0.3s ease;
+}
+
+
+/* Remove underline */
+
+.restaurant-panel-btn::after {
+  display: none !important;
+}
+
+
+.restaurant-panel-btn:hover {
+  background:
+    rgba(255, 255, 255, 0.1);
+
+  border-color:
+    rgba(255, 61, 119, 0.4);
+
+  transform:
+    translateY(-2px);
+}
+
+
+.restaurant-icon {
+  font-size: 15px;
+}
+
+
+/* =====================================================
+   HAMBURGER
+===================================================== */
+
+.menu-icon {
+  display: none;
+
+  width: 42px;
+  height: 42px;
+
+  padding: 8px;
+
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+}
+
+
+.menu-icon span {
+  display: block;
+
+  width: 25px;
+  height: 2px;
+
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  transition:
+    0.3s ease;
+}
+
+
+/* =====================================================
+   HAMBURGER ANIMATION
+===================================================== */
+
+.menu-icon.open span:nth-child(1) {
+  transform:
+    translateY(7px)
+    rotate(45deg);
+}
+
+
+.menu-icon.open span:nth-child(2) {
+  opacity: 0;
+}
+
+
+.menu-icon.open span:nth-child(3) {
+  transform:
+    translateY(-7px)
+    rotate(-45deg);
+}
+
+
+/* =====================================================
+   TABLET / MOBILE
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .navbar {
+    padding: 0 5%;
+  }
+
+
+  /* LOGO */
+
+  .logo {
+    width: 130px;
+    height: 76px;
+  }
+
+
+  .logo-img {
+    width: 120px;
+    height: 62px;
+  }
+
+
+  /* HAMBURGER */
+
+  .menu-icon {
+    display: flex;
+
+    z-index: 1001;
+  }
+
+
+  /* =================================================
+     MOBILE NAV
+  ================================================= */
+
+  .nav-links {
+    position: fixed;
+
+    top: 76px;
+    left: 0;
+
+    width: 100%;
+    height:
+      calc(100vh - 76px);
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 27px;
+
+    background:
+      rgba(10, 10, 10, 0.97);
+
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+
+    transform:
+      translateY(-20px);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease,
+      visibility 0.35s ease;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+  }
+
+
+  /* ACTIVE */
+
+  .nav-links.active {
+    transform:
+      translateY(0);
+
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+  }
+
+
+  .nav-links li {
+    width: auto;
+  }
+
+
+  .nav-links a {
+    font-size: 18px;
+  }
+
+
+  /* CART */
+
+  .cart-icon a {
+    width: 42px;
+    height: 42px;
+
+    font-size: 20px;
+  }
+
+
+  /* RESTAURANT */
+
+  .restaurant-panel-btn {
+    font-size: 15px !important;
+
+    padding:
+      10px 16px;
+  }
+
+
+  /* AUTH */
+
+  .auth-btn {
+    padding:
+      11px 28px;
+
+    font-size: 15px;
+  }
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 480px) {
+
+  .navbar {
+    height: 70px;
+
+    padding:
+      0 20px;
+  }
+
+
+  /* LOGO */
+
+  .logo {
+    width: 120px;
+    height: 70px;
+  }
+
+
+  .logo-img {
+    width: 110px;
+    height: 58px;
+  }
+
+
+  /* MENU ICON */
+
+  .menu-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+
+  /* MOBILE MENU */
+
+  .nav-links {
+    top: 70px;
+
+    height:
+      calc(100vh - 70px);
+  }
+}
+
+
+/* =====================================================
+   VERY SMALL PHONES
+===================================================== */
+
+@media (max-width: 360px) {
+
+  .navbar {
+    padding:
+      0 15px;
+  }
+
+
+  .logo {
+    width: 105px;
+  }
+
+
+  .logo-img {
+    width: 100px;
+    height: 55px;
+  }
+
+
+  .nav-links {
+    gap: 23px;
+  }
+
+
+  .nav-links a {
+    font-size: 17px;
+  }
 }

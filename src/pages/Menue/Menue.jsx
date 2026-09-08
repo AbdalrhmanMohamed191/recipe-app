@@ -1,250 +1,22 @@
-// import React, { useEffect, useState } from "react";
-// import { FaCartPlus } from "react-icons/fa";
-// import { MdFavorite, MdOutlineFavoriteBorder } from "react-icons/md";
-// import { useCart } from "../../component/CartContext/CartContext";
-// import { useNavigate } from "react-router-dom";
-// import api from "../../api/api";
-// import { baseUrlHandler } from "../../utils/baseUrlHandler";
-// import socket from "../../socket/socket";
-// import "./Menue.css";
-
-// const categories = [
-//   "all","beef","chicken","pizza","crepes","dessert","drinks","soup","seafood","pasta","salad",
-// ];
-
-// const Menue = () => {
-//   const [recipes, setRecipes] = useState([]);
-//   const [favorites, setFavorites] = useState([]);
-//   const [active, setActive] = useState("all");
-//   const [loading, setLoading] = useState(true);
-
-//   const [selectedVariants, setSelectedVariants] = useState({});
-
-//   const navigate = useNavigate();
-//   const { addToCart } = useCart();
-
-//   const getImageUrl = (item) => {
-//     const img = item.CoverImage;
-//     if (!img) return "https://via.placeholder.com/300";
-//     if (img.startsWith("http")) return img;
-//     return `${baseUrlHandler()}/${img.replace(/^\/+/, "")}`;
-//   };
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         setLoading(true);
-//         const res = await api.get("/api/v1/recipes");
-//         setRecipes(res.data);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchData();
-//     setFavorites(JSON.parse(localStorage.getItem("favorites")) || []);
-
-//     socket.on("recipeCreated", (r) => setRecipes((p) => [r, ...p]));
-//     socket.on("recipeUpdated", (r) =>
-//       setRecipes((p) => p.map((i) => (i._id === r._id ? r : i)))
-//     );
-//     socket.on("recipeDeleted", (id) =>
-//       setRecipes((p) => p.filter((i) => i._id !== id))
-//     );
-
-//     return () => {
-//       socket.off("recipeCreated");
-//       socket.off("recipeUpdated");
-//       socket.off("recipeDeleted");
-//     };
-//   }, []);
-
-//   const toggleFavorite = (id) => {
-//     const updated = favorites.includes(id)
-//       ? favorites.filter((f) => f !== id)
-//       : [...favorites, id];
-
-//     setFavorites(updated);
-//     localStorage.setItem("favorites", JSON.stringify(updated));
-//   };
-
-//   const filtered =
-//     active === "all"
-//       ? recipes
-//       : recipes.filter((r) => r.category?.toLowerCase() === active);
-
-//   const handleSelectVariant = (productId, variant) => {
-//     setSelectedVariants((prev) => ({
-//       ...prev,
-//       [productId]: variant,
-//     }));
-//   };
-
-//   // 🔥 FIXED LOGIC
-//   const handleAddToCart = (item) => {
-//     const hasVariants = item.variants && item.variants.length > 0;
-//     const selected = selectedVariants[item._id];
-
-//     if (hasVariants && !selected) {
-//       return alert("Please select size first 🔥");
-//     }
-
-//     addToCart({
-//       _id: item._id,
-//       title: item.title,
-//       selectedVariant: selected || null,
-//       price: selected ? selected.price : item.price,
-//     });
-//   };
-
-//   return (
-//     <div className="menu-page">
-
-//       <div className="menu-header">
-//         <h1>🍽 Our Menu</h1>
-//         <p>Fresh • Fast • Premium Taste</p>
-//       </div>
-
-//       <div className="categories">
-//         {categories.map((cat) => (
-//           <button
-//             key={cat}
-//             onClick={() => setActive(cat)}
-//             className={active === cat ? "cat active" : "cat"}
-//           >
-//             {cat}
-//           </button>
-//         ))}
-//       </div>
-
-//       <div className="menu-grid">
-
-//         {loading ? (
-//           <div className="loader"></div>
-//         ) : (
-
-//           filtered.map((item) => {
-//             const selected = selectedVariants[item._id];
-
-//             return (
-//               <div key={item._id} className="menu-card">
-
-//                 <div className="image-wrapper">
-//                   <img src={getImageUrl(item)} alt={item.title} />
-//                 </div>
-
-//                 <div className="content">
-
-//                   <h3>{item.title}</h3>
-
-//                   <p className="desc">
-//                     {Array.isArray(item.ingredients)
-//                       ? item.ingredients.join(", ")
-//                       : item.ingredients}
-//                   </p>
-
-//                   {/* VARIANTS */}
-//                   {item.variants?.length > 0 && (
-//                     <div className="variants">
-//                       {item.variants.map((v, i) => (
-//                         <button
-//                           key={i}
-//                           className={
-//                             selected?.name === v.name
-//                               ? "variant active"
-//                               : "variant"
-//                           }
-//                           onClick={() =>
-//                             handleSelectVariant(item._id, v)
-//                           }
-//                         >
-//                           {v.name}
-//                         </button>
-//                       ))}
-//                     </div>
-//                   )}
-
-//                   {/* PRICE */}
-//                   <div className="price-box">
-
-//                     {!item.variants || item.variants.length === 0 ? (
-//                       <span className="price">
-//                         {item.price} EGP
-//                       </span>
-//                     ) : selected ? (
-//                       <>
-//                         <span className="price">
-//                           {selected.price} EGP
-//                         </span>
-//                         <br />
-//                         <small>{selected.name}</small>
-//                       </>
-//                     ) : (
-//                       <span className="hint">
-//                         Select size
-//                       </span>
-//                     )}
-
-//                   </div>
-
-//                   {/* BUTTONS */}
-//                   <div className="btn-group">
-
-//                     <button
-//                       className="add-btn"
-//                       onClick={() => handleAddToCart(item)}
-//                     >
-//                       <FaCartPlus /> Add
-//                     </button>
-
-//                     <button
-//                       className="view-btn"
-//                       onClick={() =>
-//                         navigate(`/recipe/${item._id}`)
-//                       }
-//                     >
-//                       View
-//                     </button>
-
-//                   </div>
-
-//                 </div>
-
-//                 <div
-//                   className="fav-icon"
-//                   onClick={() => toggleFavorite(item._id)}
-//                 >
-//                   {favorites.includes(item._id) ? (
-//                     <MdFavorite color="#e74c3c" size={22} />
-//                   ) : (
-//                     <MdOutlineFavoriteBorder size={22} />
-//                   )}
-//                 </div>
-
-//               </div>
-//             );
-//           })
-//         )}
-
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Menue;
-
-
-
-
 import React, { useEffect, useMemo, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
 import { FaCartPlus } from "react-icons/fa";
-import { MdFavorite, MdOutlineFavoriteBorder } from "react-icons/md";
-import { useCart } from "../../component/CartContext/CartContext";
-import { useNavigate } from "react-router-dom";
+import {
+  MdFavorite,
+  MdOutlineFavoriteBorder,
+} from "react-icons/md";
+
 import api from "../../api/api";
-import { baseUrlHandler } from "../../utils/baseUrlHandler";
+import { useCart } from "../../component/CartContext/CartContext";
 import socket from "../../socket/socket";
+import { baseUrlHandler } from "../../utils/baseUrlHandler";
+
 import "./Menue.css";
+
+// ==============================
+// CATEGORIES
+// ==============================
 
 const categories = [
   "all",
@@ -260,301 +32,513 @@ const categories = [
   "salad",
 ];
 
-const MenuCard = React.memo(
-  ({
-    item,
-    favorite,
-    toggleFavorite,
-    navigate,
-    addToCart,
-    getImageUrl,
-  }) => {
-    const [selectedVariant, setSelectedVariant] = useState(null);
+// ==============================
+// MENU CARD
+// ==============================
 
-    const handleAddToCart = () => {
-      const hasVariants =
-        item.variants && item.variants.length > 0;
+const MenuCard = ({
+  item,
+  favorite,
+  toggleFavorite,
+  addToCart,
+  navigate,
+}) => {
+  const [selectedVariant, setSelectedVariant] = useState(null);
 
-      if (hasVariants && !selectedVariant) {
-        return alert("Please select size first 🔥");
-      }
+  // ==============================
+  // IMAGE
+  // ==============================
 
-      addToCart({
-        _id: item._id,
-        title: item.title,
-        selectedVariant: selectedVariant || null,
-        price: selectedVariant
-          ? selectedVariant.price
-          : item.price,
-        CoverImage: item.CoverImage,
-      });
-    };
+  const getImage = (image) => {
+    if (!image) {
+      return "https://via.placeholder.com/600x400?text=Food";
+    }
 
-    return (
-      <div className="menu-card">
+    if (image.startsWith("http")) {
+      return image;
+    }
 
-        <div className="fav-icon">
-          <button
-            onClick={() => toggleFavorite(item._id)}
-            className="fav-btn"
-          >
-            {favorite ? (
-              <MdFavorite color="#e74c3c" size={22} />
-            ) : (
-              <MdOutlineFavoriteBorder size={22} />
-            )}
-          </button>
-        </div>
+    return `${baseUrlHandler()}/${image.replace(/^\/+/, "")}`;
+  };
 
-        <div className="image-wrapper">
-          <img
-            src={getImageUrl(item)}
-            alt={item.title}
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
+  // ==============================
+  // ADD TO CART
+  // ==============================
 
-        <div className="content">
+  const handleAdd = () => {
+    const hasVariants =
+      item.variants && item.variants.length > 0;
 
-          <h3>{item.title}</h3>
+    // لو المنتج له Variants لازم يختار واحد
+    if (hasVariants && !selectedVariant) {
+      alert("اختار الحجم الأول 🔥");
+      return;
+    }
 
-          <p className="desc">
-            {Array.isArray(item.ingredients)
-              ? item.ingredients.join(", ")
-              : item.ingredients}
-          </p>
+    const price = selectedVariant
+      ? Number(selectedVariant.price)
+      : Number(item.price);
 
-          {item.variants?.length > 0 && (
-            <div className="variants">
+    addToCart({
+      _id: item._id,
 
-              {item.variants.map((variant, index) => (
+      title: item.title,
+
+      price,
+
+      selectedVariant: selectedVariant || null,
+
+      CoverImage: item.CoverImage,
+
+      restaurantId: item.restaurantId,
+    });
+  };
+
+  return (
+    <div className="menu-card">
+
+      {/* =========================
+          FAVORITE
+      ========================= */}
+
+      <div className="fav-icon">
+        <button
+          type="button"
+          className="fav-btn"
+          onClick={() =>
+            toggleFavorite(item._id)
+          }
+        >
+          {favorite ? (
+            <MdFavorite
+              color="#e74c3c"
+              size={22}
+            />
+          ) : (
+            <MdOutlineFavoriteBorder
+              size={22}
+            />
+          )}
+        </button>
+      </div>
+
+      {/* =========================
+          IMAGE
+      ========================= */}
+
+      <div className="image-wrapper">
+        <img
+          src={getImage(item.CoverImage)}
+          alt={item.title}
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.src =
+              "https://via.placeholder.com/600x400?text=Food";
+          }}
+        />
+      </div>
+
+      {/* =========================
+          CONTENT
+      ========================= */}
+
+      <div className="content">
+
+        <h3>{item.title}</h3>
+
+        <p className="desc">
+          {Array.isArray(item.ingredients)
+            ? item.ingredients.join(", ")
+            : item.ingredients ||
+              "Delicious food waiting for you"}
+        </p>
+
+        {/* =========================
+            VARIANTS
+        ========================= */}
+
+        {item.variants?.length > 0 && (
+          <div className="variants">
+
+            {item.variants.map(
+              (variant, index) => (
                 <button
+                  type="button"
                   key={index}
                   className={
-                    selectedVariant?.name === variant.name
+                    selectedVariant?.name ===
+                    variant.name
                       ? "variant active"
                       : "variant"
                   }
                   onClick={() =>
-                    setSelectedVariant(variant)
+                    setSelectedVariant(
+                      variant
+                    )
                   }
                 >
                   {variant.name}
                 </button>
-              ))}
-
-            </div>
-          )}
-
-          <div className="price-box">
-
-            {!item.variants ||
-            item.variants.length === 0 ? (
-              <span className="price">
-                {item.price} EGP
-              </span>
-            ) : selectedVariant ? (
-              <>
-                <span className="price">
-                  {selectedVariant.price} EGP
-                </span>
-
-                <small className="selected-size">
-                  {selectedVariant.name}
-                </small>
-              </>
-            ) : (
-              <span className="hint">
-                Select size
-              </span>
+              )
             )}
 
           </div>
+        )}
 
-          <div className="btn-group">
+        {/* =========================
+            PRICE
+        ========================= */}
 
-            <button
-              className="add-btn"
-              onClick={handleAddToCart}
-            >
-              <FaCartPlus />
-              Add
-            </button>
+        <div className="price-box">
 
-            <button
-              className="view-btn"
-              onClick={() =>
-                navigate(`/recipe/${item._id}`)
-              }
-            >
-              View
-            </button>
+          <span className="price">
+            {selectedVariant
+              ? Number(
+                  selectedVariant.price
+                )
+              : Number(item.price || 0)}{" "}
+            EGP
+          </span>
 
-          </div>
+          {selectedVariant && (
+            <small className="selected-size">
+              {selectedVariant.name}
+            </small>
+          )}
+
+        </div>
+
+        {/* =========================
+            BUTTONS
+        ========================= */}
+
+        <div className="btn-group">
+
+          <button
+            type="button"
+            className="add-btn"
+            onClick={handleAdd}
+          >
+            <FaCartPlus />
+            Add
+          </button>
+
+          <button
+            type="button"
+            className="view-btn"
+            onClick={() =>
+              navigate(
+                `/recipe/${item._id}`
+              )
+            }
+          >
+            View
+          </button>
 
         </div>
 
       </div>
-    );
-  }
-);
+
+    </div>
+  );
+};
+
+// ==============================
+// MAIN MENU
+// ==============================
 
 const Menue = () => {
-  const [recipes, setRecipes] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-  const [active, setActive] = useState("all");
-  const [loading, setLoading] = useState(true);
+  const { id } = useParams();
 
   const navigate = useNavigate();
+
   const { addToCart } = useCart();
 
-  const getImageUrl = (item) => {
-    const img = item.CoverImage;
+  const [recipes, setRecipes] = useState([]);
 
-    if (!img) {
-      return "https://via.placeholder.com/600x400";
-    }
+  const [favorites, setFavorites] =
+    useState([]);
 
-    if (img.startsWith("http")) {
-      return `${img}?auto=format&fit=crop&w=600&q=80`;
-    }
+  const [active, setActive] =
+    useState("all");
 
-    return `${baseUrlHandler()}/${img.replace(
-      /^\/+/,
-      ""
-    )}`;
-  };
+  const [loading, setLoading] =
+    useState(true);
+
+  // ==============================
+  // FETCH RESTAURANT MENU
+  // ==============================
 
   useEffect(() => {
-    const fetchRecipes = async () => {
+    const fetchMenu = async () => {
       try {
         setLoading(true);
 
-        const res = await api.get("/api/v1/recipes");
+        const res = await api.get(
+          `/api/v1/restaurants/${id}/menu`
+        );
 
         setRecipes(res.data);
       } catch (error) {
-        console.log(error);
+        console.error(
+          "Menu Error:",
+          error
+        );
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRecipes();
+    fetchMenu();
 
-    const favs =
-      JSON.parse(localStorage.getItem("favorites")) || [];
+    // ==============================
+    // FAVORITES
+    // ==============================
 
-    setFavorites(favs);
+    const savedFavorites =
+      JSON.parse(
+        localStorage.getItem(
+          "favorites"
+        )
+      ) || [];
+
+    setFavorites(savedFavorites);
+
+    // ==============================
+    // SOCKET
+    // ==============================
 
     socket.off("recipeCreated");
     socket.off("recipeUpdated");
     socket.off("recipeDeleted");
 
-    socket.on("recipeCreated", (recipe) => {
-      setRecipes((prev) => [recipe, ...prev]);
-    });
+    // New recipe
+    socket.on(
+      "recipeCreated",
+      (recipe) => {
+        const recipeRestaurantId =
+          recipe.restaurantId?._id ||
+          recipe.restaurantId;
 
-    socket.on("recipeUpdated", (recipe) => {
-      setRecipes((prev) =>
-        prev.map((item) =>
-          item._id === recipe._id ? recipe : item
-        )
-      );
-    });
+        if (
+          recipeRestaurantId?.toString() ===
+          id?.toString()
+        ) {
+          setRecipes((prev) => [
+            recipe,
+            ...prev,
+          ]);
+        }
+      }
+    );
 
-    socket.on("recipeDeleted", (id) => {
-      setRecipes((prev) =>
-        prev.filter((item) => item._id !== id)
-      );
-    });
+    // Updated recipe
+    socket.on(
+      "recipeUpdated",
+      (recipe) => {
+        setRecipes((prev) =>
+          prev.map((item) =>
+            item._id === recipe._id
+              ? recipe
+              : item
+          )
+        );
+      }
+    );
+
+    // Deleted recipe
+    socket.on(
+      "recipeDeleted",
+      (deletedId) => {
+        setRecipes((prev) =>
+          prev.filter(
+            (item) =>
+              item._id !== deletedId
+          )
+        );
+      }
+    );
+
+    // ==============================
+    // CLEANUP
+    // ==============================
 
     return () => {
       socket.off("recipeCreated");
       socket.off("recipeUpdated");
       socket.off("recipeDeleted");
     };
-  }, []);
+  }, [id]);
+
+  // ==============================
+  // FILTER
+  // ==============================
 
   const filteredRecipes = useMemo(() => {
-    return active === "all"
-      ? recipes
-      : recipes.filter(
-          (recipe) =>
-            recipe.category?.toLowerCase() === active
-        );
+    if (active === "all") {
+      return recipes;
+    }
+
+    return recipes.filter(
+      (recipe) =>
+        (recipe.category || "")
+          .toLowerCase() ===
+        active.toLowerCase()
+    );
   }, [recipes, active]);
 
-  const toggleFavorite = (id) => {
-    const updated = favorites.includes(id)
-      ? favorites.filter((f) => f !== id)
-      : [...favorites, id];
+  // ==============================
+  // FAVORITE
+  // ==============================
 
-    setFavorites(updated);
+  const toggleFavorite = (recipeId) => {
+    const updatedFavorites =
+      favorites.includes(recipeId)
+        ? favorites.filter(
+            (favoriteId) =>
+              favoriteId !== recipeId
+          )
+        : [
+            ...favorites,
+            recipeId,
+          ];
+
+    setFavorites(
+      updatedFavorites
+    );
 
     localStorage.setItem(
       "favorites",
-      JSON.stringify(updated)
+      JSON.stringify(
+        updatedFavorites
+      )
     );
   };
+
+  // ==============================
+  // UI
+  // ==============================
 
   return (
     <div className="menu-page">
 
+      {/* =========================
+          HEADER
+      ========================= */}
+
       <div className="menu-header">
-        <h1>🍽 Our Menu</h1>
-        <p>Fresh • Fast • Premium Taste</p>
+
+        <h1>
+          🍽 Restaurant Menu
+        </h1>
+
+        <p>
+          Fresh food delivered fast
+        </p>
+
       </div>
+
+      {/* =========================
+          CATEGORIES
+      ========================= */}
 
       <div className="categories">
 
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            className={
-              active === cat ? "cat active" : "cat"
-            }
-            onClick={() => setActive(cat)}
-          >
-            {cat}
-          </button>
-        ))}
+        {categories.map(
+          (category) => (
+            <button
+              type="button"
+              key={category}
+              className={
+                active === category
+                  ? "cat active"
+                  : "cat"
+              }
+              onClick={() =>
+                setActive(category)
+              }
+            >
+              {category}
+            </button>
+          )
+        )}
 
       </div>
+
+      {/* =========================
+          LOADING
+      ========================= */}
 
       {loading ? (
 
         <div className="skeleton-grid">
 
-          {[...Array(8)].map((_, index) => (
-            <div
-              key={index}
-              className="skeleton-card"
-            >
-              <div className="skeleton-image"></div>
-              <div className="skeleton-line"></div>
-              <div className="skeleton-line short"></div>
-            </div>
-          ))}
+          {[1, 2, 3, 4, 5, 6].map(
+            (item) => (
+              <div
+                key={item}
+                className="skeleton-card"
+              >
+                <div className="skeleton-image" />
+
+                <div className="skeleton-line" />
+
+                <div className="skeleton-line short" />
+              </div>
+            )
+          )}
 
         </div>
 
       ) : (
 
+        /* =========================
+           MENU
+        ========================= */
+
         <div className="menu-grid">
 
-          {filteredRecipes.map((item) => (
-            <MenuCard
-              key={item._id}
-              item={item}
-              favorite={favorites.includes(item._id)}
-              toggleFavorite={toggleFavorite}
-              navigate={navigate}
-              addToCart={addToCart}
-              getImageUrl={getImageUrl}
-            />
-          ))}
+          {filteredRecipes.length ===
+          0 ? (
+
+            <div className="empty-menu">
+
+              <h3>
+                No items found 😢
+              </h3>
+
+              <p>
+                This restaurant doesn't
+                have items in this
+                category yet.
+              </p>
+
+            </div>
+
+          ) : (
+
+            filteredRecipes.map(
+              (item) => (
+
+                <MenuCard
+                  key={item._id}
+                  item={item}
+                  favorite={favorites.includes(
+                    item._id
+                  )}
+                  toggleFavorite={
+                    toggleFavorite
+                  }
+                  addToCart={
+                    addToCart
+                  }
+                  navigate={navigate}
+                />
+
+              )
+            )
+
+          )}
 
         </div>
 

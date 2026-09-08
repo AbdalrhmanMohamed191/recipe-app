@@ -40,12 +40,13 @@ const AdminLayout = () => {
         <nav>
           <Link to="/admin" className={linkClass("/admin")}>🏠 Home</Link>
           <Link to="/admin/dashboard" className={linkClass("/admin/dashboard")}>📊 Dashboard</Link>
-          <Link to="/admin/orders" className={linkClass("/admin/orders")}>🧾 Orders</Link>
-          <Link to="/admin/offers" className={linkClass("/admin/AdminOffers")}>🎁 Offers</Link>
-          <Link to="/admin/bookings" className={linkClass("/admin/AdminBookings")}>📅 Bookings</Link>
-          <Link to="/admin/recipes" className={linkClass("/admin/recipes")}>🍔 Recipes</Link>
+          {/* <Link to="/admin/orders" className={linkClass("/admin/orders")}>🧾 Orders</Link> */}
+          {/* <Link to="/admin/offers" className={linkClass("/admin/offers")}>🎁 Offers</Link> */}
+          {/* <Link to="/admin/bookings" className={linkClass("/admin/bookings")}>📅 Bookings</Link> */}
+          <Link to="/admin/restaurants" className={linkClass("/admin/restaurants")}>🍽️ Restaurants</Link>
+          {/* <Link to="/admin/recipes" className={linkClass("/admin/recipes")}>🍔 Recipes</Link> */}
           <Link to="/admin/users" className={linkClass("/admin/users")}>👤 Users</Link>
-          <Link to="/admin/contacts" className={linkClass("/admin/AdminContacts")}>📞 Contact</Link>
+          <Link to="/admin/contacts" className={linkClass("/admin/contacts")}>📞 Contact</Link>
         </nav>
 
         <button className="logout" onClick={logout}>

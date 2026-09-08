@@ -40,6 +40,20 @@ import { setUser, clearUser } from "../store/userSlice/userSlice.js";
 
 // API
 import api from "./api/api.js";
+import Restaurants from "./pages/Restaurants/Restaurants.jsx";
+import AdminRestaurants from "./pages/AdminRestaurants/AdminRestaurants.jsx";
+import RestaurantLayout from "./pages/RestaurantLayout/RestaurantLayout.jsx";
+import RestaurantHome from "./pages/RestaurantHome/RestaurantHome.jsx";
+import RestaurantDashboard from "./pages/RestaurantDashboard/RestaurantDashboard.jsx";
+import RestaurantOrders from "./pages/RestaurantOrders/RestaurantOrders.jsx";
+import RestaurantRecipes from "./pages/RestaurantRecipes/RestaurantRecipes.jsx";
+import RestaurantProfile from "./pages/RestaurantProfile/RestaurantProfile.jsx";
+import RestaurantOffer from "./pages/RestaurantOffer/RestaurantOffer.jsx";
+import OfferDetails from "./pages/OfferDetails/OfferDetails.jsx";
+// import AdminRestaurants from "./pages/AdminRestaurants/AdminRestaurants.jsx";
+// import AdminRestaurantMenu from "./pages/AdminRestaurantMenu/AdminRestaurantMenu.jsx";
+// import AdminRecipeForm from "./pages/AdminRecipeForm/AdminRecipeForm.jsx";
+
 
 const App = () => {
   const dispatch = useDispatch();
@@ -101,15 +115,18 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/about" element={<About />} />
-          <Route path="/menue" element={<Menue />} />
+          <Route path="/menu/:id" element={<Menue />} />
           <Route path="/recipe/:id" element={<RecipeView />} />
           <Route path="/myorders" element={<MyOrders />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/booktable" element={<BookTable />} />
           <Route path="/mybookings" element={<MyBookings />} />
+          <Route path="/restaurants" element={<Restaurants />} />
+         
 
           {/* ✅ FIXED OFFERS PAGE */}
           <Route path="/offers" element={<OffersPage />} />
+          <Route path="/offers/:id" element={<OfferDetails />} />
         </Route>
 
         {/* ADMIN ROUTES */}
@@ -129,7 +146,24 @@ const App = () => {
           <Route path="contacts" element={<AdminContacts />} />
           <Route path="bookings" element={<AdminBookings />} />
           <Route path="offers" element={<AdminOffersPage />} />
+          <Route path="restaurants" element={<AdminRestaurants />} />
+          {/* <Route path="/admin/restaurants/:id" element={<AdminRestaurantMenu />}/>  */}
+          {/* <Route path="/admin/restaurants/add" element={<AdminRecipeForm />}/> */}
+
         </Route>
+
+
+        {/* RESTAURANT OWNER ROUTES */}
+        <Route path="/restaurant" element={<RestaurantLayout />}>
+          <Route index element={<RestaurantHome />} />
+          <Route path="restaurantdashboard" element={<RestaurantDashboard />} />
+          <Route path="restaurantorders" element={<RestaurantOrders />} />
+          <Route path="restaurantrecipes" element={<RestaurantRecipes />} />
+          <Route path="restaurantprofile" element={<RestaurantProfile />} />
+          <Route path="restaurantoffer" element={<RestaurantOffer />} />
+          {/* Add more restaurant owner routes here */}
+        </Route>
+
 
         {/* 404 */}
         <Route path="*" element={<h1>404 Not Found</h1>} />
@@ -139,7 +173,6 @@ const App = () => {
 
           </>
   );
-
 };
 
 
