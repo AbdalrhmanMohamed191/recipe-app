@@ -1,556 +1,3 @@
-// import React, { useEffect, useMemo, useState } from "react";
-// import { useParams, useNavigate } from "react-router-dom";
-
-// import { FaCartPlus } from "react-icons/fa";
-// import {
-//   MdFavorite,
-//   MdOutlineFavoriteBorder,
-// } from "react-icons/md";
-
-// import api from "../../api/api";
-// import { useCart } from "../../component/CartContext/CartContext";
-// import socket from "../../socket/socket";
-// import { baseUrlHandler } from "../../utils/baseUrlHandler";
-
-// import "./Menue.css";
-
-// // ==============================
-// // CATEGORIES
-// // ==============================
-
-// const categories = [
-//   "all",
-//   "beef",
-//   "chicken",
-//   "pizza",
-//   "crepes",
-//   "dessert",
-//   "drinks",
-//   "soup",
-//   "seafood",
-//   "pasta",
-//   "salad",
-// ];
-
-// // ==============================
-// // MENU CARD
-// // ==============================
-
-// const MenuCard = ({
-//   item,
-//   favorite,
-//   toggleFavorite,
-//   addToCart,
-//   navigate,
-// }) => {
-//   const [selectedVariant, setSelectedVariant] = useState(null);
-
-//   // ==============================
-//   // IMAGE
-//   // ==============================
-
-//   const getImage = (image) => {
-//     if (!image) {
-//       return "https://via.placeholder.com/600x400?text=Food";
-//     }
-
-//     if (image.startsWith("http")) {
-//       return image;
-//     }
-
-//     return `${baseUrlHandler()}/${image.replace(/^\/+/, "")}`;
-//   };
-
-//   // ==============================
-//   // ADD TO CART
-//   // ==============================
-
-//   const handleAdd = () => {
-//     const hasVariants =
-//       item.variants && item.variants.length > 0;
-
-//     // لو المنتج له Variants لازم يختار واحد
-//     if (hasVariants && !selectedVariant) {
-//       alert("اختار الحجم الأول 🔥");
-//       return;
-//     }
-
-//     const price = selectedVariant
-//       ? Number(selectedVariant.price)
-//       : Number(item.price);
-
-//     addToCart({
-//       _id: item._id,
-
-//       title: item.title,
-
-//       price,
-
-//       selectedVariant: selectedVariant || null,
-
-//       CoverImage: item.CoverImage,
-
-//       restaurantId: item.restaurantId,
-//     });
-//   };
-
-//   return (
-//     <div className="menu-card">
-
-//       {/* =========================
-//           FAVORITE
-//       ========================= */}
-
-//       <div className="fav-icon">
-//         <button
-//           type="button"
-//           className="fav-btn"
-//           onClick={() =>
-//             toggleFavorite(item._id)
-//           }
-//         >
-//           {favorite ? (
-//             <MdFavorite
-//               color="#e74c3c"
-//               size={22}
-//             />
-//           ) : (
-//             <MdOutlineFavoriteBorder
-//               size={22}
-//             />
-//           )}
-//         </button>
-//       </div>
-
-//       {/* =========================
-//           IMAGE
-//       ========================= */}
-
-//       <div className="image-wrapper">
-//         <img
-//           src={getImage(item.CoverImage)}
-//           alt={item.title}
-//           loading="lazy"
-//           onError={(e) => {
-//             e.currentTarget.src =
-//               "https://via.placeholder.com/600x400?text=Food";
-//           }}
-//         />
-//       </div>
-
-//       {/* =========================
-//           CONTENT
-//       ========================= */}
-
-//       <div className="content">
-
-//         <h3>{item.title}</h3>
-
-//         <p className="desc">
-//           {Array.isArray(item.ingredients)
-//             ? item.ingredients.join(", ")
-//             : item.ingredients ||
-//               "Delicious food waiting for you"}
-//         </p>
-
-//         {/* =========================
-//             VARIANTS
-//         ========================= */}
-
-//         {item.variants?.length > 0 && (
-//           <div className="variants">
-
-//             {item.variants.map(
-//               (variant, index) => (
-//                 <button
-//                   type="button"
-//                   key={index}
-//                   className={
-//                     selectedVariant?.name ===
-//                     variant.name
-//                       ? "variant active"
-//                       : "variant"
-//                   }
-//                   onClick={() =>
-//                     setSelectedVariant(
-//                       variant
-//                     )
-//                   }
-//                 >
-//                   {variant.name}
-//                 </button>
-//               )
-//             )}
-
-//           </div>
-//         )}
-
-//         {/* =========================
-//             PRICE
-//         ========================= */}
-
-//         <div className="price-box">
-
-//           <span className="price">
-//             {selectedVariant
-//               ? Number(
-//                   selectedVariant.price
-//                 )
-//               : Number(item.price || 0)}{" "}
-//             EGP
-//           </span>
-
-//           {selectedVariant && (
-//             <small className="selected-size">
-//               {selectedVariant.name}
-//             </small>
-//           )}
-
-//         </div>
-
-//         {/* =========================
-//             BUTTONS
-//         ========================= */}
-
-//         <div className="btn-group">
-
-//           <button
-//             type="button"
-//             className="add-btn"
-//             onClick={handleAdd}
-//           >
-//             <FaCartPlus />
-//             Add
-//           </button>
-
-//           <button
-//             type="button"
-//             className="view-btn"
-//             onClick={() =>
-//               navigate(
-//                 `/recipe/${item._id}`
-//               )
-//             }
-//           >
-//             View
-//           </button>
-
-//         </div>
-
-//       </div>
-
-//     </div>
-//   );
-// };
-
-// // ==============================
-// // MAIN MENU
-// // ==============================
-
-// const Menue = () => {
-//   const { id } = useParams();
-
-//   const navigate = useNavigate();
-
-//   const { addToCart } = useCart();
-
-//   const [recipes, setRecipes] = useState([]);
-
-//   const [favorites, setFavorites] =
-//     useState([]);
-
-//   const [active, setActive] =
-//     useState("all");
-
-//   const [loading, setLoading] =
-//     useState(true);
-
-//   // ==============================
-//   // FETCH RESTAURANT MENU
-//   // ==============================
-
-//   useEffect(() => {
-//     const fetchMenu = async () => {
-//       try {
-//         setLoading(true);
-
-//         const res = await api.get(
-//           `/api/v1/restaurants/${id}/menu`
-//         );
-
-//         setRecipes(res.data);
-//       } catch (error) {
-//         console.error(
-//           "Menu Error:",
-//           error
-//         );
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchMenu();
-
-//     // ==============================
-//     // FAVORITES
-//     // ==============================
-
-//     const savedFavorites =
-//       JSON.parse(
-//         localStorage.getItem(
-//           "favorites"
-//         )
-//       ) || [];
-
-//     setFavorites(savedFavorites);
-
-//     // ==============================
-//     // SOCKET
-//     // ==============================
-
-//     socket.off("recipeCreated");
-//     socket.off("recipeUpdated");
-//     socket.off("recipeDeleted");
-
-//     // New recipe
-//     socket.on(
-//       "recipeCreated",
-//       (recipe) => {
-//         const recipeRestaurantId =
-//           recipe.restaurantId?._id ||
-//           recipe.restaurantId;
-
-//         if (
-//           recipeRestaurantId?.toString() ===
-//           id?.toString()
-//         ) {
-//           setRecipes((prev) => [
-//             recipe,
-//             ...prev,
-//           ]);
-//         }
-//       }
-//     );
-
-//     // Updated recipe
-//     socket.on(
-//       "recipeUpdated",
-//       (recipe) => {
-//         setRecipes((prev) =>
-//           prev.map((item) =>
-//             item._id === recipe._id
-//               ? recipe
-//               : item
-//           )
-//         );
-//       }
-//     );
-
-//     // Deleted recipe
-//     socket.on(
-//       "recipeDeleted",
-//       (deletedId) => {
-//         setRecipes((prev) =>
-//           prev.filter(
-//             (item) =>
-//               item._id !== deletedId
-//           )
-//         );
-//       }
-//     );
-
-//     // ==============================
-//     // CLEANUP
-//     // ==============================
-
-//     return () => {
-//       socket.off("recipeCreated");
-//       socket.off("recipeUpdated");
-//       socket.off("recipeDeleted");
-//     };
-//   }, [id]);
-
-//   // ==============================
-//   // FILTER
-//   // ==============================
-
-//   const filteredRecipes = useMemo(() => {
-//     if (active === "all") {
-//       return recipes;
-//     }
-
-//     return recipes.filter(
-//       (recipe) =>
-//         (recipe.category || "")
-//           .toLowerCase() ===
-//         active.toLowerCase()
-//     );
-//   }, [recipes, active]);
-
-//   // ==============================
-//   // FAVORITE
-//   // ==============================
-
-//   const toggleFavorite = (recipeId) => {
-//     const updatedFavorites =
-//       favorites.includes(recipeId)
-//         ? favorites.filter(
-//             (favoriteId) =>
-//               favoriteId !== recipeId
-//           )
-//         : [
-//             ...favorites,
-//             recipeId,
-//           ];
-
-//     setFavorites(
-//       updatedFavorites
-//     );
-
-//     localStorage.setItem(
-//       "favorites",
-//       JSON.stringify(
-//         updatedFavorites
-//       )
-//     );
-//   };
-
-//   // ==============================
-//   // UI
-//   // ==============================
-
-//   return (
-//     <div className="menu-page">
-
-//       {/* =========================
-//           HEADER
-//       ========================= */}
-
-//       <div className="menu-header">
-
-//         <h1>
-//           🍽 Restaurant Menu
-//         </h1>
-
-//         <p>
-//           Fresh food delivered fast
-//         </p>
-
-//       </div>
-
-//       {/* =========================
-//           CATEGORIES
-//       ========================= */}
-
-//       <div className="categories">
-
-//         {categories.map(
-//           (category) => (
-//             <button
-//               type="button"
-//               key={category}
-//               className={
-//                 active === category
-//                   ? "cat active"
-//                   : "cat"
-//               }
-//               onClick={() =>
-//                 setActive(category)
-//               }
-//             >
-//               {category}
-//             </button>
-//           )
-//         )}
-
-//       </div>
-
-//       {/* =========================
-//           LOADING
-//       ========================= */}
-
-//       {loading ? (
-
-//         <div className="skeleton-grid">
-
-//           {[1, 2, 3, 4, 5, 6].map(
-//             (item) => (
-//               <div
-//                 key={item}
-//                 className="skeleton-card"
-//               >
-//                 <div className="skeleton-image" />
-
-//                 <div className="skeleton-line" />
-
-//                 <div className="skeleton-line short" />
-//               </div>
-//             )
-//           )}
-
-//         </div>
-
-//       ) : (
-
-//         /* =========================
-//            MENU
-//         ========================= */
-
-//         <div className="menu-grid">
-
-//           {filteredRecipes.length ===
-//           0 ? (
-
-//             <div className="empty-menu">
-
-//               <h3>
-//                 No items found 😢
-//               </h3>
-
-//               <p>
-//                 This restaurant doesn't
-//                 have items in this
-//                 category yet.
-//               </p>
-
-//             </div>
-
-//           ) : (
-
-//             filteredRecipes.map(
-//               (item) => (
-
-//                 <MenuCard
-//                   key={item._id}
-//                   item={item}
-//                   favorite={favorites.includes(
-//                     item._id
-//                   )}
-//                   toggleFavorite={
-//                     toggleFavorite
-//                   }
-//                   addToCart={
-//                     addToCart
-//                   }
-//                   navigate={navigate}
-//                 />
-
-//               )
-//             )
-
-//           )}
-
-//         </div>
-
-//       )}
-
-//     </div>
-//   );
-// };
-
-// export default Menue;
-
-
 import React, {
   useEffect,
   useMemo,
@@ -653,18 +100,14 @@ const MenuCard = ({
       !selectedVariant
     ) {
       alert(
-        "اختار الحجم الأول 🔥"
+        "choose a variant first 🔥"
       );
-
       return;
     }
 
-    const price =
-      selectedVariant
-        ? Number(
-            selectedVariant.price
-          )
-        : Number(item.price);
+    const price = selectedVariant
+      ? Number(selectedVariant.price)
+      : Number(item.price);
 
     addToCart({
       _id: item._id,
@@ -677,6 +120,14 @@ const MenuCard = ({
       restaurantId:
         item.restaurantId,
     });
+
+    // ==============================
+    // SUCCESS ALERT
+    // ==============================
+
+    alert(
+      "Item added to cart successfully! 🛒"
+    );
   };
 
   return (
@@ -687,14 +138,11 @@ const MenuCard = ({
       ========================= */}
 
       <div className="fav-icon">
-
         <button
           type="button"
           className="fav-btn"
           onClick={() =>
-            toggleFavorite(
-              item._id
-            )
+            toggleFavorite(item._id)
           }
         >
           {favorite ? (
@@ -708,7 +156,6 @@ const MenuCard = ({
             />
           )}
         </button>
-
       </div>
 
       {/* =========================
@@ -716,7 +163,6 @@ const MenuCard = ({
       ========================= */}
 
       <div className="image-wrapper">
-
         <img
           src={getImage(
             item.CoverImage
@@ -728,7 +174,6 @@ const MenuCard = ({
               "https://via.placeholder.com/600x400?text=Food";
           }}
         />
-
       </div>
 
       {/* =========================
@@ -745,9 +190,7 @@ const MenuCard = ({
           {Array.isArray(
             item.ingredients
           )
-            ? item.ingredients.join(
-                ", "
-              )
+            ? item.ingredients.join(", ")
             : item.ingredients ||
               "Delicious food waiting for you"}
         </p>
@@ -756,10 +199,8 @@ const MenuCard = ({
             VARIANTS
         ========================= */}
 
-        {item.variants?.length >
-          0 && (
+        {item.variants?.length > 0 && (
           <div className="variants">
-
             {item.variants.map(
               (
                 variant,
@@ -780,13 +221,10 @@ const MenuCard = ({
                     )
                   }
                 >
-                  {
-                    variant.name
-                  }
+                  {variant.name}
                 </button>
               )
             )}
-
           </div>
         )}
 
@@ -797,7 +235,6 @@ const MenuCard = ({
         <div className="price-box">
 
           <span className="price">
-
             {selectedVariant
               ? Number(
                   selectedVariant.price
@@ -806,7 +243,6 @@ const MenuCard = ({
                   item.price || 0
                 )}{" "}
             EGP
-
           </span>
 
           {selectedVariant && (
@@ -828,12 +264,9 @@ const MenuCard = ({
           <button
             type="button"
             className="add-btn"
-            onClick={
-              handleAdd
-            }
+            onClick={handleAdd}
           >
             <FaCartPlus />
-
             Add
           </button>
 
@@ -852,7 +285,6 @@ const MenuCard = ({
         </div>
 
       </div>
-
     </div>
   );
 };
@@ -862,14 +294,11 @@ const MenuCard = ({
 // ==============================
 
 const Menue = () => {
-  const { id } =
-    useParams();
+  const { id } = useParams();
 
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
-  const { addToCart } =
-    useCart();
+  const { addToCart } = useCart();
 
   const [
     recipes,
@@ -896,34 +325,33 @@ const Menue = () => {
   // ==============================
 
   useEffect(() => {
-    const fetchMenu =
-      async () => {
-        try {
-          setLoading(true);
+    const fetchMenu = async () => {
+      try {
+        setLoading(true);
 
-          const res =
-            await api.get(
-              `/api/v1/restaurants/${id}/menu`
-            );
-
-          setRecipes(
-            Array.isArray(
-              res.data
-            )
-              ? res.data
-              : []
-          );
-        } catch (error) {
-          console.error(
-            "Menu Error:",
-            error
+        const res =
+          await api.get(
+            `/api/v1/restaurants/${id}/menu`
           );
 
-          setRecipes([]);
-        } finally {
-          setLoading(false);
-        }
-      };
+        setRecipes(
+          Array.isArray(
+            res.data
+          )
+            ? res.data
+            : []
+        );
+      } catch (error) {
+        console.error(
+          "Menu Error:",
+          error
+        );
+
+        setRecipes([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchMenu();
 
@@ -973,26 +401,25 @@ const Menue = () => {
           recipeRestaurantId?.toString() ===
           id?.toString()
         ) {
-          setRecipes(
-            (prev) => {
-              // منع تكرار المنتج
-              const exists =
-                prev.some(
-                  (item) =>
-                    item._id ===
-                    recipe._id
-                );
+          setRecipes((prev) => {
 
-              if (exists) {
-                return prev;
-              }
+            // منع تكرار المنتج
+            const exists =
+              prev.some(
+                (item) =>
+                  item._id ===
+                  recipe._id
+              );
 
-              return [
-                recipe,
-                ...prev,
-              ];
+            if (exists) {
+              return prev;
             }
-          );
+
+            return [
+              recipe,
+              ...prev,
+            ];
+          });
         }
       }
     );
@@ -1024,6 +451,7 @@ const Menue = () => {
     socket.on(
       "recipeDeleted",
       (deletedId) => {
+
         const idToDelete =
           typeof deletedId ===
           "object"
@@ -1067,6 +495,7 @@ const Menue = () => {
 
   const availableCategories =
     useMemo(() => {
+
       // نجيب الكاتيجوريز الموجودة فعلًا
       const existingCategories =
         recipes
@@ -1106,6 +535,7 @@ const Menue = () => {
   // ==============================
 
   useEffect(() => {
+
     // لو الكاتيجوري اللي مختارها
     // اختفت بسبب تحديث المنتجات
     // نرجع لـ all
@@ -1118,6 +548,7 @@ const Menue = () => {
     ) {
       setActive("all");
     }
+
   }, [
     active,
     availableCategories,
@@ -1129,6 +560,7 @@ const Menue = () => {
 
   const filteredRecipes =
     useMemo(() => {
+
       if (
         active === "all"
       ) {
@@ -1146,6 +578,7 @@ const Menue = () => {
             .toLowerCase() ===
           active.toLowerCase()
       );
+
     }, [
       recipes,
       active,
@@ -1158,6 +591,7 @@ const Menue = () => {
   const toggleFavorite = (
     recipeId
   ) => {
+
     const updatedFavorites =
       favorites.includes(
         recipeId
@@ -1215,6 +649,7 @@ const Menue = () => {
 
         {availableCategories.map(
           (category) => (
+
             <button
               type="button"
               key={category}
@@ -1232,6 +667,7 @@ const Menue = () => {
             >
               {category}
             </button>
+
           )
         )}
 
@@ -1242,6 +678,7 @@ const Menue = () => {
       ========================= */}
 
       {loading ? (
+
         <div className="skeleton-grid">
 
           {[
@@ -1253,6 +690,7 @@ const Menue = () => {
             6,
           ].map(
             (item) => (
+
               <div
                 key={item}
                 className="skeleton-card"
@@ -1265,10 +703,12 @@ const Menue = () => {
                 <div className="skeleton-line short" />
 
               </div>
+
             )
           )}
 
         </div>
+
       ) : (
 
         /* =========================
@@ -1279,6 +719,7 @@ const Menue = () => {
 
           {filteredRecipes.length ===
           0 ? (
+
             <div className="empty-menu">
 
               <h3>
@@ -1293,10 +734,12 @@ const Menue = () => {
               </p>
 
             </div>
+
           ) : (
 
             filteredRecipes.map(
               (item) => (
+
                 <MenuCard
                   key={
                     item._id
@@ -1315,12 +758,14 @@ const Menue = () => {
                     navigate
                   }
                 />
+
               )
             )
 
           )}
 
         </div>
+
       )}
 
     </div>
