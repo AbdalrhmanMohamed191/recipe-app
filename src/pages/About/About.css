@@ -4,14 +4,36 @@
 
 .about-page {
   min-height: 100vh;
+  padding-top: 76px;
+  overflow: hidden;
 
-  background: #f8f8f8;
+  background:
+    radial-gradient(
+      circle at 85% 5%,
+      rgba(255, 71, 125, 0.055),
+      transparent 30%
+    ),
+    #fafafa;
 
   color: #202020;
+}
 
-  padding-top: 76px;
 
-  overflow: hidden;
+/* =====================================================
+   COMMON
+===================================================== */
+
+.about-label {
+  display: inline-flex;
+  align-items: center;
+
+  margin-bottom: 12px;
+
+  color: #ff477d;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
 }
 
 
@@ -20,57 +42,38 @@
 ===================================================== */
 
 .about-hero {
-  max-width: 1200px;
+  position: relative;
 
-  min-height: 550px;
+  max-width: 1180px;
+  min-height: 570px;
 
   margin: 0 auto;
-
-  padding: 70px 30px;
+  padding: 65px 30px 55px;
 
   display: grid;
-
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: minmax(0, 1.05fr) minmax(380px, 0.95fr);
 
   align-items: center;
-
-  gap: 50px;
-
-  box-sizing: border-box;
+  gap: 35px;
 }
 
 
 .about-hero-content {
+  position: relative;
+  z-index: 2;
+
   max-width: 620px;
-}
-
-
-.about-label {
-  display: inline-block;
-
-  margin-bottom: 12px;
-
-  color: #ff477d;
-
-  font-size: 11px;
-
-  font-weight: 800;
-
-  letter-spacing: 2.5px;
 }
 
 
 .about-hero h1 {
   margin: 0;
 
-  color: #1c1c1c;
+  color: #191919;
 
-  font-size: clamp(42px, 5vw, 64px);
-
-  line-height: 1.05;
-
-  letter-spacing: -2px;
-
+  font-size: clamp(44px, 5vw, 67px);
+  line-height: 1.02;
+  letter-spacing: -3px;
   font-weight: 850;
 }
 
@@ -81,27 +84,26 @@
   background:
     linear-gradient(
       135deg,
-      #ff3d77,
-      #ff9a3d
+      #ff3d77 0%,
+      #ff6c64 45%,
+      #ff9a3d 100%
     );
 
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-
   background-clip: text;
 }
 
 
 .about-hero p {
-  max-width: 560px;
+  max-width: 550px;
 
   margin: 22px 0 0;
 
   color: #777;
 
-  font-size: 15px;
-
-  line-height: 1.8;
+  font-size: 14px;
+  line-height: 1.85;
 }
 
 
@@ -111,7 +113,6 @@
 
 .about-hero-buttons {
   display: flex;
-
   align-items: center;
 
   gap: 12px;
@@ -123,27 +124,28 @@
 .about-primary-btn,
 .about-secondary-btn,
 .about-cta button {
-  height: 45px;
+  min-height: 46px;
 
-  padding: 0 18px;
-
-  border-radius: 10px;
+  padding: 0 19px;
 
   display: inline-flex;
-
   align-items: center;
-
   justify-content: center;
 
   gap: 9px;
 
-  font-size: 12px;
+  border-radius: 11px;
 
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 750;
 
   cursor: pointer;
 
-  transition: 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
 }
 
 
@@ -160,22 +162,20 @@
   color: #fff;
 
   box-shadow:
-    0 7px 20px
-    rgba(255, 61, 119, 0.2);
+    0 10px 25px rgba(255, 61, 119, 0.18);
 }
 
 
 .about-primary-btn:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 
   box-shadow:
-    0 12px 25px
-    rgba(255, 61, 119, 0.3);
+    0 14px 30px rgba(255, 61, 119, 0.27);
 }
 
 
 .about-secondary-btn {
-  border: 1px solid #ddd;
+  border: 1px solid #e4e4e4;
 
   background: #fff;
 
@@ -184,11 +184,14 @@
 
 
 .about-secondary-btn:hover {
-  border-color: #ff7194;
+  transform: translateY(-2px);
+
+  border-color: #ff9a9f;
 
   color: #ff477d;
 
-  transform: translateY(-2px);
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.05);
 }
 
 
@@ -199,12 +202,10 @@
 .about-hero-visual {
   position: relative;
 
-  min-height: 400px;
+  min-height: 410px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 }
 
@@ -212,47 +213,59 @@
 .food-glow {
   position: absolute;
 
-  width: 320px;
-  height: 320px;
+  width: 330px;
+  height: 330px;
 
   border-radius: 50%;
 
   background:
-    linear-gradient(
-      135deg,
-      rgba(255, 61, 119, 0.15),
-      rgba(255, 154, 61, 0.2)
+    radial-gradient(
+      circle,
+      rgba(255, 71, 125, 0.15),
+      rgba(255, 154, 61, 0.09) 55%,
+      transparent 72%
     );
 
-  filter: blur(5px);
+  filter: blur(2px);
 }
 
 
 .food-circle {
   position: relative;
+  z-index: 1;
 
-  width: 270px;
-  height: 270px;
+  width: 275px;
+  height: 275px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   border-radius: 50%;
 
-  background: #fff;
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #fffafa
+    );
 
-  border: 10px solid rgba(255, 255, 255, 0.8);
+  border: 9px solid rgba(255, 255, 255, 0.85);
 
   box-shadow:
-    0 25px 60px
-    rgba(0, 0, 0, 0.12);
+    0 30px 65px rgba(0, 0, 0, 0.12),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.025);
 
   font-size: 125px;
 
-  transform: rotate(-5deg);
+  transform: rotate(-4deg);
+
+  transition: transform 0.4s ease;
+}
+
+
+.about-hero-visual:hover .food-circle {
+  transform: rotate(0deg) scale(1.025);
 }
 
 
@@ -262,47 +275,54 @@
 
 .floating-card {
   position: absolute;
+  z-index: 3;
+
+  min-width: 155px;
 
   display: flex;
-
   align-items: center;
 
   gap: 10px;
 
-  padding: 11px 14px;
+  padding: 12px 14px;
 
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(255, 255, 255, 0.94);
 
-  border: 1px solid #eee;
+  border: 1px solid rgba(235, 235, 235, 0.9);
 
-  border-radius: 12px;
+  border-radius: 13px;
 
   box-shadow:
-    0 10px 30px
-    rgba(0, 0, 0, 0.1);
+    0 14px 35px rgba(0, 0, 0, 0.09);
+
+  backdrop-filter: blur(10px);
+
+  animation: floatingCard 4s ease-in-out infinite;
 }
 
 
 .floating-card svg {
-  color: #ff477d;
+  flex-shrink: 0;
 
   font-size: 15px;
+
+  color: #ff477d;
 }
 
 
 .floating-card div {
   display: flex;
-
   flex-direction: column;
 
-  gap: 2px;
+  gap: 3px;
 }
 
 
 .floating-card strong {
-  color: #222;
+  color: #252525;
 
   font-size: 11px;
+  font-weight: 750;
 }
 
 
@@ -314,16 +334,16 @@
 
 
 .card-one {
-  top: 65px;
-
-  left: 5px;
+  top: 62px;
+  left: 0;
 }
 
 
 .card-two {
   right: 0;
+  bottom: 62px;
 
-  bottom: 65px;
+  animation-delay: -1.5s;
 }
 
 
@@ -332,46 +352,55 @@
 }
 
 
+@keyframes floatingCard {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+
 /* =====================================================
    STATS
 ===================================================== */
 
 .about-stats {
-  max-width: 1140px;
+  position: relative;
+  z-index: 5;
 
-  margin: 0 auto 70px;
+  max-width: 1080px;
 
-  padding: 25px 30px;
+  margin: -5px auto 85px;
+  padding: 23px 20px;
 
   display: grid;
-
-  grid-template-columns:
-    repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 
   background: #fff;
 
-  border: 1px solid #eee;
-
-  border-radius: 16px;
+  border: 1px solid #ededed;
+  border-radius: 17px;
 
   box-shadow:
-    0 8px 30px
-    rgba(0, 0, 0, 0.04);
+    0 12px 35px rgba(0, 0, 0, 0.045);
 }
 
 
 .stat-item {
+  min-height: 58px;
+
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-
   justify-content: center;
 
-  gap: 4px;
+  gap: 5px;
 
-  border-right: 1px solid #eee;
+  border-right: 1px solid #eeeeee;
 }
 
 
@@ -381,18 +410,20 @@
 
 
 .stat-item strong {
-  color: #222;
+  color: #202020;
 
-  font-size: 25px;
+  font-size: 26px;
+  line-height: 1;
 
-  font-weight: 800;
+  font-weight: 850;
 }
 
 
 .stat-item span {
   color: #999;
 
-  font-size: 11px;
+  font-size: 10px;
+  font-weight: 500;
 }
 
 
@@ -405,15 +436,14 @@
 
   margin: 0 auto;
 
-  padding: 20px 30px 90px;
+  padding: 10px 30px 100px;
 
   display: grid;
-
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 
   align-items: center;
 
-  gap: 70px;
+  gap: 65px;
 }
 
 
@@ -437,20 +467,17 @@
   border-radius: 20px;
 
   box-shadow:
-    0 20px 50px
-    rgba(0, 0, 0, 0.12);
+    0 22px 50px rgba(0, 0, 0, 0.12);
 }
 
 
 .story-badge {
   position: absolute;
 
-  right: -20px;
-
-  bottom: 25px;
+  right: -18px;
+  bottom: 24px;
 
   display: flex;
-
   align-items: center;
 
   gap: 10px;
@@ -459,11 +486,12 @@
 
   background: #fff;
 
-  border-radius: 12px;
+  border: 1px solid #eeeeee;
+
+  border-radius: 13px;
 
   box-shadow:
-    0 10px 30px
-    rgba(0, 0, 0, 0.12);
+    0 12px 30px rgba(0, 0, 0, 0.12);
 }
 
 
@@ -476,8 +504,9 @@
 
 .story-badge span {
   display: flex;
-
   flex-direction: column;
+
+  gap: 3px;
 
   color: #999;
 
@@ -492,27 +521,31 @@
 }
 
 
+.story-content {
+  max-width: 500px;
+}
+
+
 .story-content h2 {
   margin: 0;
 
   color: #222;
 
-  font-size: 38px;
+  font-size: 40px;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
 
-  line-height: 1.15;
-
-  letter-spacing: -1px;
+  font-weight: 800;
 }
 
 
 .story-content > p {
-  margin: 15px 0 0;
+  margin: 16px 0 0;
 
   color: #777;
 
-  font-size: 14px;
-
-  line-height: 1.8;
+  font-size: 13px;
+  line-height: 1.85;
 }
 
 
@@ -521,19 +554,17 @@
 ===================================================== */
 
 .story-points {
-  margin-top: 25px;
+  margin-top: 27px;
 
   display: flex;
-
   flex-direction: column;
 
-  gap: 15px;
+  gap: 16px;
 }
 
 
 .story-points > div {
   display: flex;
-
   align-items: center;
 
   gap: 12px;
@@ -541,14 +572,14 @@
 
 
 .story-points svg {
-  width: 36px;
-  height: 36px;
+  flex-shrink: 0;
+
+  width: 38px;
+  height: 38px;
 
   padding: 10px;
 
-  box-sizing: border-box;
-
-  border-radius: 10px;
+  border-radius: 11px;
 
   background:
     rgba(255, 61, 119, 0.08);
@@ -559,7 +590,6 @@
 
 .story-points span {
   display: flex;
-
   flex-direction: column;
 
   gap: 3px;
@@ -570,6 +600,7 @@
   color: #333;
 
   font-size: 12px;
+  font-weight: 750;
 }
 
 
@@ -589,15 +620,14 @@
 
   margin: 0 auto;
 
-  padding:
-    10px 30px 90px;
+  padding: 5px 30px 95px;
 }
 
 
 .section-heading {
   max-width: 650px;
 
-  margin: 0 auto 35px;
+  margin: 0 auto 38px;
 
   text-align: center;
 }
@@ -608,20 +638,23 @@
 
   color: #222;
 
-  font-size: 35px;
+  font-size: 36px;
+  line-height: 1.15;
+  letter-spacing: -1px;
 
-  line-height: 1.2;
+  font-weight: 800;
 }
 
 
 .section-heading p {
-  margin: 12px auto 0;
+  max-width: 520px;
+
+  margin: 13px auto 0;
 
   color: #888;
 
-  font-size: 13px;
-
-  line-height: 1.7;
+  font-size: 12px;
+  line-height: 1.8;
 }
 
 
@@ -632,52 +665,54 @@
 .features-grid {
   display: grid;
 
-  grid-template-columns:
-    repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 
   gap: 18px;
 }
 
 
 .feature-card {
-  padding: 25px 22px;
+  min-height: 205px;
+
+  padding: 24px 22px;
 
   background: #fff;
 
-  border: 1px solid #eee;
+  border: 1px solid #eeeeee;
 
-  border-radius: 15px;
+  border-radius: 16px;
 
   box-shadow:
-    0 5px 20px
-    rgba(0, 0, 0, 0.04);
+    0 7px 22px rgba(0, 0, 0, 0.035);
 
-  transition: 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
 
 .feature-card:hover {
   transform: translateY(-5px);
 
+  border-color: #f1dfe5;
+
   box-shadow:
-    0 15px 35px
-    rgba(0, 0, 0, 0.08);
+    0 17px 38px rgba(0, 0, 0, 0.075);
 }
 
 
 .feature-icon {
-  width: 42px;
-  height: 42px;
+  width: 43px;
+  height: 43px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   margin-bottom: 17px;
 
-  border-radius: 11px;
+  border-radius: 12px;
 
   background:
     linear-gradient(
@@ -697,7 +732,8 @@
 
   color: #222;
 
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 750;
 }
 
 
@@ -706,9 +742,8 @@
 
   color: #888;
 
-  font-size: 12px;
-
-  line-height: 1.7;
+  font-size: 11px;
+  line-height: 1.75;
 }
 
 
@@ -717,57 +752,96 @@
 ===================================================== */
 
 .about-cta {
+  position: relative;
+  overflow: hidden;
+
   max-width: 1140px;
 
-  margin: 0 auto 60px;
+  margin: 0 auto 65px;
 
-  padding: 55px 30px;
+  padding: 60px 30px;
 
-  border-radius: 20px;
+  border-radius: 22px;
 
   background:
     linear-gradient(
       135deg,
-      #ff3d77,
-      #ff9a3d
+      #ff3d77 0%,
+      #ff5f6d 48%,
+      #ff9a3d 100%
     );
 
   color: #fff;
 
   text-align: center;
 
-  box-sizing: border-box;
-
   box-shadow:
-    0 20px 45px
-    rgba(255, 61, 119, 0.2);
+    0 22px 50px rgba(255, 61, 119, 0.19);
+}
+
+
+.about-cta::before {
+  content: "";
+
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  top: -180px;
+  right: -80px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.1);
+}
+
+
+.about-cta::after {
+  content: "";
+
+  position: absolute;
+
+  width: 220px;
+  height: 220px;
+
+  bottom: -150px;
+  left: -50px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.08);
+}
+
+
+.about-cta > div {
+  position: relative;
+  z-index: 2;
 }
 
 
 .about-cta span {
-  font-size: 10px;
-
+  font-size: 9px;
   font-weight: 800;
-
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
 
   opacity: 0.85;
 }
 
 
 .about-cta h2 {
-  margin: 10px 0;
+  margin: 11px 0;
 
-  font-size: 34px;
-
-  line-height: 1.2;
+  font-size: 35px;
+  line-height: 1.18;
+  letter-spacing: -0.7px;
 }
 
 
 .about-cta p {
-  margin: 0 auto 22px;
+  margin: 0 auto 23px;
 
-  font-size: 13px;
+  font-size: 12px;
 
   opacity: 0.9;
 }
@@ -779,6 +853,9 @@
   background: #fff;
 
   color: #ff477d;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 
@@ -786,8 +863,7 @@
   transform: translateY(-3px);
 
   box-shadow:
-    0 10px 25px
-    rgba(0, 0, 0, 0.15);
+    0 13px 27px rgba(0, 0, 0, 0.16);
 }
 
 
@@ -796,11 +872,13 @@
 ===================================================== */
 
 .about-footer {
-  padding: 35px 20px 40px;
+  padding: 38px 20px 42px;
 
   text-align: center;
 
-  border-top: 1px solid #e8e8e8;
+  border-top: 1px solid #e9e9e9;
+
+  background: #fff;
 }
 
 
@@ -809,7 +887,9 @@
 
   font-weight: 900;
 
-  letter-spacing: -1px;
+  line-height: 1;
+
+  letter-spacing: -1.5px;
 }
 
 
@@ -832,11 +912,11 @@
 
 
 .about-footer p {
-  margin: 7px 0;
+  margin: 8px 0;
 
   color: #999;
 
-  font-size: 11px;
+  font-size: 10px;
 }
 
 
@@ -851,7 +931,7 @@
    TABLET
 ===================================================== */
 
-@media (max-width: 900px) {
+@media (max-width: 950px) {
 
   .about-hero {
     grid-template-columns: 1fr;
@@ -859,7 +939,7 @@
     min-height: auto;
 
     padding:
-      55px 25px 50px;
+      60px 25px 45px;
 
     text-align: center;
   }
@@ -884,13 +964,13 @@
 
 
   .about-hero-visual {
-    min-height: 330px;
+    min-height: 350px;
   }
 
 
   .about-stats {
-    margin-left: 25px;
-    margin-right: 25px;
+    margin:
+      0 25px 75px;
   }
 
 
@@ -905,13 +985,12 @@
 
 
   .story-image {
-    height: 400px;
-
+    width: 100%;
     max-width: 650px;
 
-    width: 100%;
-
     margin: 0 auto;
+
+    height: 400px;
   }
 
 
@@ -919,12 +998,6 @@
     max-width: 650px;
 
     margin: 0 auto;
-  }
-
-
-  .features-grid {
-    grid-template-columns:
-      repeat(3, 1fr);
   }
 
 
@@ -949,7 +1022,7 @@
 @media (max-width: 600px) {
 
   .about-page {
-    padding-top: 70px;
+    padding-top: 68px;
   }
 
 
@@ -957,32 +1030,35 @@
 
   .about-hero {
     padding:
-      40px 18px 35px;
+      42px 17px 30px;
 
-    gap: 25px;
+    gap: 20px;
   }
 
 
   .about-label {
-    font-size: 9px;
+    margin-bottom: 9px;
 
+    font-size: 8.5px;
     letter-spacing: 2px;
   }
 
 
   .about-hero h1 {
-    font-size: 37px;
+    font-size: 38px;
 
-    letter-spacing: -1.5px;
+    line-height: 1.04;
+
+    letter-spacing: -1.8px;
   }
 
 
   .about-hero p {
     margin-top: 15px;
 
-    font-size: 13px;
+    font-size: 12.5px;
 
-    line-height: 1.7;
+    line-height: 1.75;
   }
 
 
@@ -1001,47 +1077,68 @@
   .about-secondary-btn {
     width: 100%;
 
-    height: 44px;
+    min-height: 44px;
   }
 
 
-  /* VISUAL */
+  /* HERO VISUAL */
 
   .about-hero-visual {
-    min-height: 285px;
+    min-height: 280px;
+
+    margin-top: 4px;
   }
 
 
   .food-glow {
-    width: 230px;
-    height: 230px;
+    width: 225px;
+    height: 225px;
   }
 
 
   .food-circle {
-    width: 195px;
-    height: 195px;
+    width: 190px;
+    height: 190px;
 
-    font-size: 90px;
+    font-size: 87px;
 
     border-width: 7px;
   }
 
 
   .floating-card {
-    padding: 9px 11px;
+    min-width: auto;
+
+    padding: 9px 10px;
+
+    border-radius: 11px;
+  }
+
+
+  .floating-card strong {
+    font-size: 9px;
+  }
+
+
+  .floating-card span {
+    font-size: 8px;
+  }
+
+
+  .floating-card svg {
+    font-size: 13px;
   }
 
 
   .card-one {
-    top: 25px;
+    top: 17px;
     left: 0;
   }
 
 
   .card-two {
     right: 0;
-    bottom: 20px;
+    bottom: 12px;
   }
 
 
@@ -1049,18 +1146,21 @@
 
   .about-stats {
     margin:
-      0 15px 55px;
+      0 14px 60px;
 
-    padding: 18px 8px;
+    padding: 16px 7px;
 
-    grid-template-columns:
-      repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
 
-    gap: 20px;
+    gap: 18px;
+
+    border-radius: 15px;
   }
 
 
   .stat-item {
+    min-height: 48px;
+
     border-right: none;
   }
 
@@ -1071,7 +1171,7 @@
 
 
   .stat-item span {
-    font-size: 9px;
+    font-size: 8.5px;
   }
 
 
@@ -1079,37 +1179,89 @@
 
   .about-story {
     padding:
-      10px 16px 65px;
+      5px 16px 65px;
 
-    gap: 35px;
+    gap: 34px;
   }
 
 
   .story-image {
-    height: 270px;
+    height: 265px;
+  }
+
+
+  .story-image img {
+    border-radius: 17px;
   }
 
 
   .story-badge {
-    right: 10px;
+    right: 9px;
+    bottom: 12px;
 
-    bottom: 15px;
+    padding: 10px 12px;
+
+    border-radius: 11px;
+  }
+
+
+  .story-badge svg {
+    font-size: 15px;
+  }
+
+
+  .story-badge span {
+    font-size: 8px;
+  }
+
+
+  .story-badge strong {
+    font-size: 10px;
   }
 
 
   .story-content h2 {
     font-size: 30px;
+
+    letter-spacing: -1px;
   }
 
 
   .story-content > p {
-    font-size: 12.5px;
+    margin-top: 13px;
+
+    font-size: 12px;
 
     line-height: 1.75;
   }
 
 
-  /* WHY */
+  .story-points {
+    margin-top: 22px;
+
+    gap: 13px;
+  }
+
+
+  .story-points svg {
+    width: 35px;
+    height: 35px;
+
+    padding: 9px;
+  }
+
+
+  .story-points strong {
+    font-size: 11px;
+  }
+
+
+  .story-points small {
+    font-size: 9px;
+  }
+
+
+  /* WHY FAMY */
 
   .why-famy {
     padding:
@@ -1123,34 +1275,56 @@
 
 
   .section-heading h2 {
-    font-size: 28px;
+    font-size: 27px;
+
+    letter-spacing: -0.7px;
   }
 
 
   .section-heading p {
-    font-size: 12px;
+    margin-top: 10px;
+
+    font-size: 11px;
   }
 
 
   .features-grid {
     grid-template-columns: 1fr;
 
-    gap: 12px;
+    gap: 11px;
   }
 
 
   .feature-card {
-    padding: 20px;
+    min-height: auto;
+
+    padding: 19px;
+
+    border-radius: 14px;
   }
 
 
-  .feature-card h3 {
+  .feature-icon {
+    width: 39px;
+    height: 39px;
+
+    margin-bottom: 13px;
+
+    border-radius: 10px;
+
     font-size: 15px;
   }
 
 
+  .feature-card h3 {
+    font-size: 14px;
+  }
+
+
   .feature-card p {
-    font-size: 11px;
+    margin-top: 7px;
+
+    font-size: 10.5px;
   }
 
 
@@ -1158,27 +1332,39 @@
 
   .about-cta {
     margin:
-      0 15px 45px;
+      0 14px 45px;
 
     padding:
-      40px 20px;
+      42px 18px;
 
     border-radius: 17px;
   }
 
 
   .about-cta h2 {
-    font-size: 27px;
+    font-size: 26px;
+
+    letter-spacing: -0.5px;
   }
 
 
   .about-cta p {
-    font-size: 11px;
+    font-size: 10.5px;
   }
 
 
   .about-cta button {
     width: 100%;
+
+    min-height: 44px;
+  }
+
+
+  /* FOOTER */
+
+  .about-footer {
+    padding:
+      32px 18px 38px;
   }
 
 }
@@ -1195,27 +1381,32 @@
   }
 
 
-  .food-circle {
-    width: 175px;
-    height: 175px;
+  .about-hero p {
+    font-size: 11.5px;
+  }
 
-    font-size: 78px;
+
+  .food-circle {
+    width: 170px;
+    height: 170px;
+
+    font-size: 76px;
   }
 
 
   .food-glow {
-    width: 210px;
-    height: 210px;
+    width: 205px;
+    height: 205px;
   }
 
 
   .floating-card {
-    transform: scale(0.9);
+    transform: scale(0.88);
   }
 
 
   .story-image {
-    height: 235px;
+    height: 230px;
   }
 
 
@@ -1224,8 +1415,345 @@
   }
 
 
+  .section-heading h2 {
+    font-size: 25px;
+  }
+
+
   .about-cta h2 {
-    font-size: 24px;
+    font-size: 23px;
+  }
+
+}
+
+
+/* =====================================================
+   ACCESSIBILITY
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .floating-card {
+    animation: none;
+  }
+
+
+  .about-primary-btn,
+  .about-secondary-btn,
+  .about-cta button,
+  .feature-card,
+  .food-circle {
+    transition: none;
+  }
+
+}
+
+/* =====================================================
+   HERO VISUAL — CENTERED
+===================================================== */
+
+.about-hero-visual {
+  position: relative;
+
+  width: 100%;
+  min-height: 430px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  isolation: isolate;
+}
+
+
+/* =====================================================
+   GLOW
+===================================================== */
+
+.food-glow {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: 330px;
+  height: 330px;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 71, 125, 0.16) 0%,
+      rgba(255, 154, 61, 0.10) 45%,
+      transparent 72%
+    );
+
+  filter: blur(3px);
+
+  z-index: 0;
+}
+
+
+/* =====================================================
+   BURGER CIRCLE
+===================================================== */
+
+.food-circle {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: 275px;
+  height: 275px;
+
+  transform: translate(-50%, -50%) rotate(-4deg);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fff;
+
+  border: 9px solid rgba(255, 255, 255, 0.9);
+
+  box-shadow:
+    0 25px 65px rgba(0, 0, 0, 0.13);
+
+  font-size: 125px;
+
+  z-index: 1;
+
+  transition: transform 0.3s ease;
+}
+
+
+.about-hero-visual:hover .food-circle {
+  transform:
+    translate(-50%, -50%)
+    rotate(0deg)
+    scale(1.02);
+}
+
+
+/* =====================================================
+   FLOATING CARDS
+===================================================== */
+
+.floating-card {
+  position: absolute;
+
+  z-index: 3;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 11px 14px;
+
+  background: rgba(255, 255, 255, 0.97);
+
+  border: 1px solid #eeeeee;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.10);
+
+  white-space: nowrap;
+}
+
+
+.floating-card svg {
+  flex-shrink: 0;
+
+  color: #ff477d;
+
+  font-size: 15px;
+}
+
+
+.floating-card div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+
+.floating-card strong {
+  color: #222;
+
+  font-size: 11px;
+  font-weight: 750;
+}
+
+
+.floating-card span {
+  color: #999;
+
+  font-size: 9px;
+}
+
+
+/* =====================================================
+   CARD POSITIONS
+===================================================== */
+
+.card-one {
+  top: 70px;
+  left: 0;
+}
+
+
+.card-two {
+  right: 0;
+  bottom: 70px;
+}
+
+
+.card-two svg {
+  color: #ff9a3d;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 950px) {
+
+  .about-hero-visual {
+    min-height: 360px;
+  }
+
+  .food-circle {
+    width: 255px;
+    height: 255px;
+
+    font-size: 115px;
+  }
+
+  .food-glow {
+    width: 305px;
+    height: 305px;
+  }
+
+  .card-one {
+    left: 5%;
+    top: 45px;
+  }
+
+  .card-two {
+    right: 5%;
+    bottom: 45px;
+  }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+  .about-hero-visual {
+    width: 100%;
+
+    min-height: 285px;
+
+    margin-top: 5px;
+  }
+
+
+  .food-glow {
+    width: 225px;
+    height: 225px;
+  }
+
+
+  .food-circle {
+    width: 190px;
+    height: 190px;
+
+    font-size: 88px;
+
+    border-width: 7px;
+  }
+
+
+  .floating-card {
+    padding: 8px 10px;
+
+    gap: 8px;
+
+    border-radius: 10px;
+  }
+
+
+  .floating-card strong {
+    font-size: 9px;
+  }
+
+
+  .floating-card span {
+    font-size: 7.5px;
+  }
+
+
+  .floating-card svg {
+    font-size: 12px;
+  }
+
+
+  .card-one {
+    top: 18px;
+    left: 0;
+  }
+
+
+  .card-two {
+    right: 0;
+    bottom: 18px;
+  }
+
+}
+
+
+/* =====================================================
+   SMALL PHONES
+===================================================== */
+
+@media (max-width: 380px) {
+
+  .about-hero-visual {
+    min-height: 260px;
+  }
+
+
+  .food-glow {
+    width: 205px;
+    height: 205px;
+  }
+
+
+  .food-circle {
+    width: 170px;
+    height: 170px;
+
+    font-size: 76px;
+  }
+
+
+  .floating-card {
+    transform: scale(0.86);
   }
 
 }
