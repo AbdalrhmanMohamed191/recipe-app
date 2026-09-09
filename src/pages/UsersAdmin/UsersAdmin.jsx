@@ -115,13 +115,14 @@ const styles = {
   },
 
   card: {
-    background: "#1a1a1a",
+    background: "#abaaaa95",
     padding: "15px",
     borderRadius: "12px",
     display: "flex",
     flexDirection: "column",
     gap: "10px",
     transition: "0.3s",
+    color: "#fff",
     border: "1px solid #2a2a2a",
   },
 
@@ -147,7 +148,7 @@ const styles = {
 
   text: {
     margin: "2px 0",
-    color: "#bbb",
+    color: "#fffbfb",
     fontSize: "14px",
   },
 
