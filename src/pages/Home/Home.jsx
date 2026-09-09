@@ -651,7 +651,7 @@ function Home() {
             </div>
 
             <div className="hero-stat">
-              <strong>4.9</strong>
+              <strong>6.9</strong>
 
               <span>
                 Average Rating
@@ -688,7 +688,7 @@ function Home() {
             </div>
 
             <div>
-              <strong>4.9</strong>
+              <strong>6.9</strong>
 
               <span>
                 Top Rated
