@@ -1151,58 +1151,143 @@ const MyOrders = () => {
   // REORDER
   // =========================================================
 
-  const handleReorder = (
-    order
-  ) => {
-    if (
-      !order?.items ||
-      order.items.length ===
-        0
-    ) {
-      return;
+  const handleReorder = (order) => {
+  if (!order?.items || order.items.length === 0) {
+    return;
+  }
+
+  const restaurantId =
+    typeof order.restaurantId === "object"
+      ? order.restaurantId?._id
+      : order.restaurantId;
+
+  const reorderItems = order.items.map((item) => {
+    // =========================
+    // CHECK ITEM TYPE
+    // =========================
+
+    const isOffer =
+      item?.itemType === "offer" ||
+      Boolean(item?.offerId);
+
+    // =========================
+    // OFFER
+    // =========================
+
+    if (isOffer) {
+      const offerId =
+        item.offerId ||
+        item._id;
+
+      return {
+        _id: offerId,
+
+        itemType: "offer",
+
+        isOffer: true,
+
+        offerId: String(offerId),
+
+        productId: null,
+
+        title: item.title || "",
+
+        price: Number(item.price || 0),
+
+        quantity: Number(item.quantity || 1),
+
+        discount: Number(item.discount || 0),
+
+        variant: null,
+
+        selectedVariant: null,
+
+        image:
+          item.image ||
+          item.CoverImage ||
+          "",
+
+        restaurantId:
+          restaurantId ||
+          item.restaurantId ||
+          null,
+
+        restaurantName:
+          typeof order.restaurantId === "object"
+            ? order.restaurantId?.name || ""
+            : "",
+      };
     }
 
-    const reorderItems =
-      order.items.map(
-        (item) => ({
-          _id:
-            item.productId ||
-            item._id,
+    // =========================
+    // NORMAL PRODUCT
+    // =========================
 
-          title:
-            item.title,
+    const productId =
+      item.productId ||
+      item._id;
 
-          price:
-            Number(
-              item.price || 0
-            ),
+    return {
+      _id: productId,
 
-          quantity:
-            Number(
-              item.quantity || 1
-            ),
+      itemType: "product",
 
-          variant:
-            item.variant ||
-            item.selectedVariant ||
-            null,
+      isOffer: false,
 
-          restaurantId:
-            order.restaurantId ||
-            item.restaurantId ||
-            null,
-        })
-      );
+      productId: String(productId),
 
-    navigate(
-      "/cart",
-      {
-        state: {
-          reorderItems,
-        },
-      }
-    );
-  };
+      offerId: null,
+
+      title: item.title || "",
+
+      price: Number(item.price || 0),
+
+      quantity: Number(item.quantity || 1),
+
+      discount: 0,
+
+      variant:
+        item.variant ||
+        item.selectedVariant ||
+        null,
+
+      selectedVariant:
+        item.variant ||
+        item.selectedVariant ||
+        null,
+
+      image:
+        item.image ||
+        item.CoverImage ||
+        "",
+
+      restaurantId:
+        restaurantId ||
+        item.restaurantId ||
+        null,
+
+      restaurantName:
+        typeof order.restaurantId === "object"
+          ? order.restaurantId?.name || ""
+          : "",
+    };
+  });
+
+  console.log(
+    "🔄 REORDER ITEMS:",
+    JSON.stringify(
+      reorderItems,
+      null,
+      2
+    )
+  );
+
+  navigate("/cart", {
+    state: {
+      reorderItems,
+    },
+  });
+};
 
   // =========================================================
   // LOADING
@@ -1647,7 +1732,7 @@ const MyOrders = () => {
 
                   {/* DELIVERY */}
 
-                  <p>
+                  {/* <p>
                     <b>
                       Delivery:
                     </b>{" "}
@@ -1659,11 +1744,11 @@ const MyOrders = () => {
                       2
                     )}{" "}
                     EGP
-                  </p>
+                  </p> */}
 
                   {/* DISCOUNT */}
 
-                  <p>
+                  {/* <p>
                     <b>
                       Discount:
                     </b>{" "}
@@ -1675,7 +1760,7 @@ const MyOrders = () => {
                       2
                     )}{" "}
                     EGP
-                  </p>
+                  </p> */}
 
                   {/* TOTAL */}
 

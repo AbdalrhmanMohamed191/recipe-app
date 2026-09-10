@@ -145,7 +145,7 @@ function Home() {
         : response.data?.restaurants || [];
 
       setRestaurants(data);
-      console.log("RESTAURANTS IMAGES:", restaurants.map((restaurant) => restaurant.image));
+      // console.log("RESTAURANTS IMAGES:", restaurants.map((restaurant) => restaurant.image));
     } catch (error) {
       console.error(
         "HOME RESTAURANTS ERROR:",

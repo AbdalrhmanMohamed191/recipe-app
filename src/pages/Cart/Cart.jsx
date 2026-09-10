@@ -19,6 +19,8 @@
 //   const go = useNavigate();
 //   const didReorder = useRef(false);
 
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+
 //   const [address, setAddress] = useState({
 //     street: "",
 //     city: "",
@@ -43,7 +45,6 @@
 
 //           restaurantId: item.restaurantId,
 
-//           // 🔥 IMPORTANT
 //           itemType: item.itemType || "product",
 //           offerId: item.offerId || null,
 //         });
@@ -83,6 +84,14 @@
 
 //   // ================= ORDER =================
 //   const createOrder = async () => {
+//     // =================================================
+//     // PREVENT DOUBLE CLICK
+//     // =================================================
+
+//     if (isSubmitting) {
+//       return;
+//     }
+
 //     const token =
 //       localStorage.getItem("token");
 
@@ -112,6 +121,12 @@
 //         "Cart is empty"
 //       );
 //     }
+
+//     // =================================================
+//     // LOCK BUTTON IMMEDIATELY
+//     // =================================================
+
+//     setIsSubmitting(true);
 
 //     try {
 //       // =================================================
@@ -186,8 +201,6 @@
 //       await api.post(
 //         "/api/v1/orders/create",
 //         {
-//           // 🔥 باقي الـ backend بتاعك بيجيب
-//           // restaurantId من المنتج/العرض
 //           items,
 
 //           address,
@@ -220,6 +233,12 @@
 //         err?.response?.data?.message ||
 //           "Error creating order"
 //       );
+
+//       // =================================================
+//       // UNLOCK ONLY IF ORDER FAILED
+//       // =================================================
+
+//       setIsSubmitting(false);
 //     }
 //   };
 
@@ -310,6 +329,7 @@
 //                     item.key
 //                   )
 //                 }
+//                 disabled={isSubmitting}
 //               >
 //                 <FaMinus />
 //               </button>
@@ -320,6 +340,7 @@
 //                     item.key
 //                   )
 //                 }
+//                 disabled={isSubmitting}
 //               >
 //                 <FaPlus />
 //               </button>
@@ -330,6 +351,7 @@
 //                     item.key
 //                   )
 //                 }
+//                 disabled={isSubmitting}
 //               >
 //                 <FaTrash />
 //               </button>
@@ -358,6 +380,7 @@
 //                     e.target.value,
 //                 })
 //               }
+//               disabled={isSubmitting}
 //             />
 
 //             <input
@@ -372,6 +395,7 @@
 //                     e.target.value,
 //                 })
 //               }
+//               disabled={isSubmitting}
 //             />
 
 //             <input
@@ -386,6 +410,7 @@
 //                     e.target.value,
 //                 })
 //               }
+//               disabled={isSubmitting}
 //             />
 
 //           </div>
@@ -393,8 +418,11 @@
 //           <button
 //             className="confirm-btn"
 //             onClick={createOrder}
+//             disabled={isSubmitting}
 //           >
-//             Confirm Order
+//             {isSubmitting
+//               ? "Placing Order..."
+//               : "Confirm Order"}
 //           </button>
 
 //         </>
@@ -407,10 +435,29 @@
 // export default Cart;
 
 
-import React, { useEffect, useRef, useState } from "react";
-import { useCart } from "../../component/CartContext/CartContext";
-import { FaTrash, FaPlus, FaMinus } from "react-icons/fa";
-import { useNavigate, useLocation } from "react-router-dom";
+
+
+import React, {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+import {
+  useCart,
+} from "../../component/CartContext/CartContext";
+
+import {
+  FaTrash,
+  FaPlus,
+  FaMinus,
+} from "react-icons/fa";
+
+import {
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
+
 import api from "../../api/api";
 import "./cart.css";
 
@@ -426,9 +473,11 @@ const Cart = () => {
 
   const location = useLocation();
   const go = useNavigate();
+
   const didReorder = useRef(false);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] =
+    useState(false);
 
   const [address, setAddress] = useState({
     street: "",
@@ -436,143 +485,242 @@ const Cart = () => {
     notes: "",
   });
 
-  // ================= REORDER =================
+  // =====================================================
+  // REORDER
+  // =====================================================
+
   useEffect(() => {
-    if (location.state?.reorderItems && !didReorder.current) {
+    if (
+      location.state?.reorderItems &&
+      !didReorder.current
+    ) {
       didReorder.current = true;
 
-      location.state.reorderItems.forEach((item) => {
-        addToCart({
-          _id: item._id,
-          title: item.title,
-          price: Number(item.price),
+      location.state.reorderItems.forEach(
+        (item) => {
+          const isOffer =
+            item.itemType === "offer" ||
+            item.isOffer === true ||
+            Boolean(item.offerId);
 
-          selectedVariant:
-            item.variant ||
-            item.selectedVariant ||
-            null,
+          addToCart({
+            _id: item._id,
 
-          restaurantId: item.restaurantId,
+            title: item.title,
 
-          itemType: item.itemType || "product",
-          offerId: item.offerId || null,
-        });
-      });
+            price: Number(item.price),
 
-      window.history.replaceState({}, document.title);
+            selectedVariant:
+              item.variant ||
+              item.selectedVariant ||
+              null,
+
+            restaurantId:
+              item.restaurantId,
+
+            // Important
+            itemType: isOffer
+              ? "offer"
+              : "product",
+
+            isOffer,
+
+            // Important for offers
+            offerId:
+              item.offerId || null,
+
+            // Important for normal products
+            productId:
+              item.productId ||
+              (!isOffer
+                ? item._id
+                : null),
+
+            discount:
+              Number(item.discount || 0),
+
+            image:
+              item.image ||
+              item.CoverImage ||
+              "",
+          });
+        }
+      );
+
+      window.history.replaceState(
+        {},
+        document.title
+      );
     }
-  }, [location.state, addToCart]);
+  }, [
+    location.state,
+    addToCart,
+  ]);
 
-  // ================= TOTAL =================
+  // =====================================================
+  // TOTAL ITEMS
+  // =====================================================
+
   const totalItems = cart.reduce(
-    (sum, i) => sum + i.quantity,
+    (sum, item) =>
+      sum + Number(item.quantity || 0),
     0
   );
+
+  // =====================================================
+  // TOTAL PRICE
+  // =====================================================
 
   const totalPrice = cart.reduce(
-    (sum, i) => sum + Number(i.price || 0) * i.quantity,
+    (sum, item) =>
+      sum +
+      Number(item.price || 0) *
+        Number(item.quantity || 0),
     0
   );
 
-  // ================= VARIANT DISPLAY =================
+  // =====================================================
+  // VARIANT DISPLAY
+  // =====================================================
+
   const getVariantName = (item) => {
-    const v =
+    const variant =
       item.selectedVariant ||
       item.variant;
 
-    if (!v) return "Standard";
+    if (!variant) {
+      return "Standard";
+    }
 
-    if (typeof v === "string") return v;
+    if (typeof variant === "string") {
+      return variant;
+    }
 
     return (
-      v.name ||
-      v.size ||
+      variant.name ||
+      variant.size ||
       "Standard"
     );
   };
 
-  // ================= ORDER =================
+  // =====================================================
+  // CREATE ORDER
+  // =====================================================
+
   const createOrder = async () => {
-    // =================================================
+    // ===================================================
     // PREVENT DOUBLE CLICK
-    // =================================================
+    // ===================================================
 
     if (isSubmitting) {
       return;
     }
 
+    // ===================================================
+    // TOKEN
+    // ===================================================
+
     const token =
       localStorage.getItem("token");
 
-    // ================= TOKEN =================
     if (!token) {
       alert(
         "You must login first"
       );
 
       go("/login");
+
       return;
     }
 
-    // ================= ADDRESS =================
+    // ===================================================
+    // ADDRESS
+    // ===================================================
+
     if (
-      !address.street ||
-      !address.city
+      !address.street.trim() ||
+      !address.city.trim()
     ) {
-      return alert(
+      alert(
         "Please enter full address"
       );
+
+      return;
     }
 
-    // ================= CART =================
+    // ===================================================
+    // CART
+    // ===================================================
+
     if (cart.length === 0) {
-      return alert(
-        "Cart is empty"
-      );
+      alert("Cart is empty");
+
+      return;
     }
 
-    // =================================================
-    // LOCK BUTTON IMMEDIATELY
-    // =================================================
+    // ===================================================
+    // LOCK BUTTON
+    // ===================================================
 
     setIsSubmitting(true);
 
     try {
       // =================================================
-      // BUILD ITEMS
+      // BUILD ORDER ITEMS
       // =================================================
 
-      const items = cart.map((i) => {
+      const items = cart.map((item) => {
+        // ===============================================
+        // DETECT OFFER
+        // ===============================================
+
+        const isOffer =
+          item.itemType === "offer" ||
+          item.isOffer === true ||
+          Boolean(item.offerId);
+
         // ===============================================
         // OFFER
         // ===============================================
 
-        if (
-          i.itemType === "offer" ||
-          i.offerId
-        ) {
+        if (isOffer) {
+          const offerId =
+            item.offerId ||
+            item._id;
+
+          if (!offerId) {
+            throw new Error(
+              `Offer ID is missing for ${item.title}`
+            );
+          }
+
           return {
             itemType: "offer",
 
-            offerId:
-              i.offerId || i._id,
+            // Backend uses this
+            offerId: String(offerId),
 
-            title: i.title,
+            // Offer does not use productId
+            productId: null,
+
+            title:
+              item.title || "",
 
             quantity:
-              Number(i.quantity) || 1,
+              Number(item.quantity) || 1,
 
             price:
-              Number(i.price) || 0,
+              Number(item.price) || 0,
 
             discount:
-              Number(i.discount || 0),
+              Number(item.discount || 0),
 
             image:
-              i.image || "",
+              item.image ||
+              item.CoverImage ||
+              "",
 
-            variant:
-              null,
+            variant: null,
           };
         }
 
@@ -580,28 +728,61 @@ const Cart = () => {
         // NORMAL PRODUCT
         // ===============================================
 
+        const productId =
+          item.productId ||
+          item._id;
+
+        if (!productId) {
+          throw new Error(
+            `Product ID is missing for ${item.title}`
+          );
+        }
+
         return {
           itemType: "product",
 
-          productId: i._id,
+          // Backend uses this
+          productId: String(productId),
 
-          title: i.title,
+          // Normal product does not use offerId
+          offerId: null,
+
+          title:
+            item.title || "",
 
           quantity:
-            Number(i.quantity) || 1,
+            Number(item.quantity) || 1,
 
           price:
-            Number(i.price) || 0,
+            Number(item.price) || 0,
 
           variant:
-            i.selectedVariant ||
-            i.variant ||
+            item.selectedVariant ||
+            item.variant ||
             null,
 
           image:
-            i.image || "",
+            item.image ||
+            item.CoverImage ||
+            "",
         };
       });
+
+      // =================================================
+      // DEBUG
+      // =================================================
+
+      // console.log(
+      //   "🚀 ORDER ITEMS SENT TO BACKEND:"
+      // );
+
+      // console.log(
+      //   JSON.stringify(
+      //     items,
+      //     null,
+      //     2
+      //   )
+      // );
 
       // =================================================
       // CREATE ORDER
@@ -612,7 +793,16 @@ const Cart = () => {
         {
           items,
 
-          address,
+          address: {
+            street:
+              address.street.trim(),
+
+            city:
+              address.city.trim(),
+
+            notes:
+              address.notes.trim(),
+          },
 
           paymentMethod: "cash",
         },
@@ -632,29 +822,44 @@ const Cart = () => {
 
       go("/myorders");
 
-    } catch (err) {
+    } catch (error) {
       console.error(
         "CREATE ORDER ERROR:",
-        err
+        error
+      );
+
+      console.error(
+        "BACKEND RESPONSE:",
+        error?.response?.data
       );
 
       alert(
-        err?.response?.data?.message ||
+        error?.response?.data?.message ||
+          error?.message ||
           "Error creating order"
       );
 
       // =================================================
-      // UNLOCK ONLY IF ORDER FAILED
+      // UNLOCK ONLY IF FAILED
       // =================================================
 
       setIsSubmitting(false);
     }
   };
 
+  // =====================================================
+  // UI
+  // =====================================================
+
   return (
     <div className="cart-container">
 
+      {/* =================================================
+          HEADER
+      ================================================= */}
+
       <div className="cart-header">
+
         <h2>
           🛒 Your Cart
         </h2>
@@ -663,12 +868,17 @@ const Cart = () => {
           onClick={() =>
             go("/myorders")
           }
+          disabled={isSubmitting}
         >
           📦 My Orders
         </button>
+
       </div>
 
-      {/* SUMMARY */}
+      {/* =================================================
+          SUMMARY
+      ================================================= */}
+
       <div className="cart-summary">
 
         <span>
@@ -682,102 +892,148 @@ const Cart = () => {
 
       </div>
 
-      {/* CART ITEMS */}
+      {/* =================================================
+          CART ITEMS
+      ================================================= */}
+
       {cart.length === 0 ? (
         <p>
           Cart is empty
         </p>
       ) : (
-        cart.map((item) => (
-          <div
-            className="cart-item"
-            key={
-              item.key ||
-              item._id
-            }
-          >
+        cart.map((item) => {
 
-            <div>
+          const isOffer =
+            item.itemType === "offer" ||
+            item.isOffer === true ||
+            Boolean(item.offerId);
 
-              <h4>
-                {item.title}
-              </h4>
+          return (
+            <div
+              className="cart-item"
+              key={
+                item.key ||
+                item._id
+              }
+            >
 
-              {/* OFFER */}
-              {(
-                item.itemType === "offer" ||
-                item.offerId
-              ) && (
-                <p className="variant">
-                  🏷️ Special Offer
-                </p>
-              )}
+              {/* =========================================
+                  ITEM INFO
+              ========================================= */}
 
-              {/* VARIANT */}
-              {item.itemType !== "offer" &&
-                !item.offerId && (
+              <div>
+
+                <h4>
+                  {item.title}
+                </h4>
+
+                {/* =======================================
+                    OFFER
+                ======================================= */}
+
+                {isOffer && (
+                  <p className="variant">
+                    🏷️ Special Offer
+                  </p>
+                )}
+
+                {/* =======================================
+                    VARIANT
+                ======================================= */}
+
+                {!isOffer && (
                   <p className="variant">
                     {getVariantName(item)}
                   </p>
                 )}
 
-              <p>
-                {Number(
-                  item.price || 0
-                ).toFixed(2)}{" "}
-                EGP × {item.quantity}
-              </p>
+                {/* =======================================
+                    PRICE
+                ======================================= */}
+
+                <p>
+                  {Number(
+                    item.price || 0
+                  ).toFixed(2)}{" "}
+                  EGP ×{" "}
+                  {Number(
+                    item.quantity || 0
+                  )}
+                </p>
+
+              </div>
+
+              {/* =========================================
+                  ACTIONS
+              ========================================= */}
+
+              <div className="actions">
+
+                {/* MINUS */}
+
+                <button
+                  onClick={() =>
+                    decreaseQty(
+                      item.key
+                    )
+                  }
+                  disabled={
+                    isSubmitting
+                  }
+                >
+                  <FaMinus />
+                </button>
+
+                {/* PLUS */}
+
+                <button
+                  onClick={() =>
+                    increaseQty(
+                      item.key
+                    )
+                  }
+                  disabled={
+                    isSubmitting
+                  }
+                >
+                  <FaPlus />
+                </button>
+
+                {/* DELETE */}
+
+                <button
+                  onClick={() =>
+                    removeFromCart(
+                      item.key
+                    )
+                  }
+                  disabled={
+                    isSubmitting
+                  }
+                >
+                  <FaTrash />
+                </button>
+
+              </div>
 
             </div>
-
-            <div className="actions">
-
-              <button
-                onClick={() =>
-                  decreaseQty(
-                    item.key
-                  )
-                }
-                disabled={isSubmitting}
-              >
-                <FaMinus />
-              </button>
-
-              <button
-                onClick={() =>
-                  increaseQty(
-                    item.key
-                  )
-                }
-                disabled={isSubmitting}
-              >
-                <FaPlus />
-              </button>
-
-              <button
-                onClick={() =>
-                  removeFromCart(
-                    item.key
-                  )
-                }
-                disabled={isSubmitting}
-              >
-                <FaTrash />
-              </button>
-
-            </div>
-
-          </div>
-        ))
+          );
+        })
       )}
 
-      {/* ADDRESS */}
+      {/* =================================================
+          ADDRESS + CONFIRM
+      ================================================= */}
+
       {cart.length > 0 && (
         <>
 
           <div className="address">
 
+            {/* STREET */}
+
             <input
+              type="text"
               placeholder="Street"
               value={
                 address.street
@@ -785,14 +1041,20 @@ const Cart = () => {
               onChange={(e) =>
                 setAddress({
                   ...address,
+
                   street:
                     e.target.value,
                 })
               }
-              disabled={isSubmitting}
+              disabled={
+                isSubmitting
+              }
             />
 
+            {/* CITY */}
+
             <input
+              type="text"
               placeholder="City"
               value={
                 address.city
@@ -800,14 +1062,20 @@ const Cart = () => {
               onChange={(e) =>
                 setAddress({
                   ...address,
+
                   city:
                     e.target.value,
                 })
               }
-              disabled={isSubmitting}
+              disabled={
+                isSubmitting
+              }
             />
 
+            {/* NOTES */}
+
             <input
+              type="text"
               placeholder="Notes"
               value={
                 address.notes
@@ -815,19 +1083,30 @@ const Cart = () => {
               onChange={(e) =>
                 setAddress({
                   ...address,
+
                   notes:
                     e.target.value,
                 })
               }
-              disabled={isSubmitting}
+              disabled={
+                isSubmitting
+              }
             />
 
           </div>
 
+          {/* =============================================
+              CONFIRM ORDER
+          ============================================= */}
+
           <button
             className="confirm-btn"
-            onClick={createOrder}
-            disabled={isSubmitting}
+            onClick={
+              createOrder
+            }
+            disabled={
+              isSubmitting
+            }
           >
             {isSubmitting
               ? "Placing Order..."
@@ -842,3 +1121,4 @@ const Cart = () => {
 };
 
 export default Cart;
+
