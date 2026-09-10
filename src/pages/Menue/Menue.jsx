@@ -39,7 +39,7 @@ const categories = [
   "beef",
   "chicken",
   "pizza",
-  "crepes",
+  "crepe",
   "dessert",
   "drinks",
   "soup",
