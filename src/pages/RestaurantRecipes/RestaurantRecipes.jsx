@@ -174,15 +174,7 @@ const RestaurantRecipes = () => {
         form.title
       );
 
-      formData.append(
-        "ingredients",
-        JSON.stringify(
-          form.ingredients
-            .split(",")
-            .map((item) => item.trim())
-            .filter(Boolean)
-        )
-      );
+      formData.append("ingredients", form.ingredients);
 
       formData.append(
         "instructions",
@@ -551,6 +543,10 @@ const RestaurantRecipes = () => {
 
                 <option value="crepe">
                   🥞 Crepe
+                </option>
+
+                <option value="dishes">
+                  🍽️ Dishes
                 </option>
 
               </select>

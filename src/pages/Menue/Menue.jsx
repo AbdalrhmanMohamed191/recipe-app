@@ -46,6 +46,7 @@ const categories = [
   "seafood",
   "pasta",
   "salad",
+  "dishes",
 ];
 
 // ==============================

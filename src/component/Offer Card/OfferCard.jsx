@@ -201,6 +201,8 @@ const OfferCard = ({ offer }) => {
 
       restaurantName,
     });
+      alert(`✅ ${offer.title} added to cart successfully! 🛒`);
+
   };
 
   return (
