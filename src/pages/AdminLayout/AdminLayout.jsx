@@ -44,7 +44,7 @@ const AdminLayout = () => {
           {/* <Link to="/admin/offers" className={linkClass("/admin/offers")}>🎁 Offers</Link> */}
           {/* <Link to="/admin/bookings" className={linkClass("/admin/bookings")}>📅 Bookings</Link> */}
           <Link to="/admin/restaurants" className={linkClass("/admin/restaurants")}>🍽️ Restaurants</Link>
-          {/* <Link to="/admin/recipes" className={linkClass("/admin/recipes")}>🍔 Recipes</Link> */}
+          <Link to="/admin/recipes" className={linkClass("/admin/recipes")}>🍔 Menues </Link>
           <Link to="/admin/users" className={linkClass("/admin/users")}>👤 Users</Link>
           <Link to="/admin/contacts" className={linkClass("/admin/contacts")}>📞 Contact</Link>
         </nav>
