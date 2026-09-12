@@ -179,6 +179,16 @@ const Navbar = () => {
               </Link>
             </li>
 
+            {/*  Rewards */}
+            <li>
+              <Link
+                to="/rewards"
+                onClick={closeMenu}
+              >
+                Rewards
+              </Link>
+            </li>
+            
             {/* ABOUT */}
             <li>
               <Link

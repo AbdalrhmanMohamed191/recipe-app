@@ -50,6 +50,7 @@ import RestaurantRecipes from "./pages/RestaurantRecipes/RestaurantRecipes.jsx";
 import RestaurantProfile from "./pages/RestaurantProfile/RestaurantProfile.jsx";
 import RestaurantOffer from "./pages/RestaurantOffer/RestaurantOffer.jsx";
 import OfferDetails from "./pages/OfferDetails/OfferDetails.jsx";
+import Rewards from "./pages/Rewards/Rewards.jsx";
 // import AdminRestaurants from "./pages/AdminRestaurants/AdminRestaurants.jsx";
 // import AdminRestaurantMenu from "./pages/AdminRestaurantMenu/AdminRestaurantMenu.jsx";
 // import AdminRecipeForm from "./pages/AdminRecipeForm/AdminRecipeForm.jsx";
@@ -115,6 +116,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/about" element={<About />} />
+          <Route path="/rewards" element={<Rewards />} />
           <Route path="/menu/:id" element={<Menue />} />
           <Route path="/recipe/:id" element={<RecipeView />} />
           <Route path="/myorders" element={<MyOrders />} />
